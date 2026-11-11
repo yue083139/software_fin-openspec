@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { teacherPost } from "../api";
+import { teacherDownload, teacherPost, teacherUpload } from "../api";
+import { ImportPanel } from "./ImportPanel";
+import { Board } from "./Results";
 import { useLiveView } from "../live";
 import { PHASE_LABEL, type TeacherView } from "../types";
 
 type Act = (path: string, body?: unknown) => void;
 
-export function PhaseControls({ view, act }: { view: TeacherView; act: Act }) {
+export function PhaseControls({ view, act, download }: { view: TeacherView; act: Act; download: () => void }) {
   return (
     <section className="card">
       <p className="phase">
@@ -21,7 +23,15 @@ export function PhaseControls({ view, act }: { view: TeacherView; act: Act }) {
         <button disabled={view.phase !== "ended"} onClick={() => act("reset")}>
           重置活動
         </button>
+        <button disabled={view.phase !== "ended" || !view.source} onClick={download}>
+          匯出 Guided Notes
+        </button>
       </div>
+      {view.phase === "ended" && (
+        <p className="muted">
+          匯出的 xlsx 已把每題搶答成功的答案寫入原填空格；放回 Google 試算表：檔案 → 匯入 → 上傳 → 取代試算表。
+        </p>
+      )}
     </section>
   );
 }
@@ -61,10 +71,27 @@ export function TeamSettings({ view, act }: { view: TeacherView; act: Act }) {
   );
 }
 
-export function TeacherPanel({ view, act }: { view: TeacherView; act: Act }) {
+type Upload = (file: File) => void;
+
+export function TeacherPanel({
+  view,
+  act,
+  upload,
+  download = () => {},
+}: {
+  view: TeacherView;
+  act: Act;
+  upload: Upload;
+  download?: () => void;
+}) {
   return (
     <>
-      <PhaseControls view={view} act={act} />
+      <PhaseControls view={view} act={act} download={download} />
+      <section className="card">
+        <h2>作答狀況與結果</h2>
+        <Board board={view.board} teams={view.teams} scores={view.team_scores} />
+      </section>
+      <ImportPanel view={view} onUpload={upload} onUrl={(url) => act("import-url", { url })} />
       <TeamSettings view={view} act={act} />
     </>
   );
@@ -77,6 +104,14 @@ export default function Teacher({ teacherKey }: { teacherKey: string }) {
     setError("");
     teacherPost(path, teacherKey, body).catch((e: Error) => setError(e.message));
   };
+  const upload: Upload = (file) => {
+    setError("");
+    teacherUpload(teacherKey, file).catch((e: Error) => setError(e.message));
+  };
+  const download = () => {
+    setError("");
+    teacherDownload(teacherKey).catch((e: Error) => setError(e.message));
+  };
   if (closedCode === 4401)
     return (
       <main className="page">
@@ -87,7 +122,7 @@ export default function Teacher({ teacherKey }: { teacherKey: string }) {
     <main className="page">
       <h1>老師頁</h1>
       {error && <p className="error">{error}</p>}
-      {view?.role === "teacher" ? <TeacherPanel view={view} act={act} /> : <p>連線中…</p>}
+      {view?.role === "teacher" ? <TeacherPanel view={view} act={act} upload={upload} download={download} /> : <p>連線中…</p>}
     </main>
   );
 }

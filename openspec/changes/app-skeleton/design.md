@@ -34,6 +34,8 @@
 
 啟動時 `secrets.token_urlsafe(16)` 產生（可用環境變數 `QUIZ_TEACHER_KEY` 指定，供測試與重啟沿用），終端機印出 `老師頁：http://127.0.0.1:8000/#/teacher?key=…`。老師 REST 以標頭 `X-Teacher-Key`、WebSocket 以查詢參數 `key` 帶入，以 `secrets.compare_digest` 比對；錯或缺 ⇒ REST 401、WebSocket 以代碼 4401 關閉。金鑰不寫入檔案、不入庫；uvicorn 存取日誌會印出含查詢字串的 WebSocket 路徑，故 `python -m quiz_server` **關閉存取日誌**（v1.0 評審發現）。
 
+**實作回補（2026-11-11，真棧探針 `probes/results/2026-11-11-e2e-flow.txt`）**：①uvicorn 印出 WebSocket 接受紀錄的是 INFO 等級的錯誤日誌而非存取日誌，`access_log=False` 擋不到，改為 uvicorn `log_level="warning"`；②uvicorn 不含 WebSocket 實作，server 依賴須加 `websockets`，否則真瀏覽器連 `/ws` 得 404（TestClient 不經 uvicorn，單元測試測不到）。兩者皆屬實作偏離提案，於此回稿。
+
 - 證偽欄｜可證偽：`test_api_skeleton.py::test_teacher_api_requires_key`。
 
 ### D6 組別

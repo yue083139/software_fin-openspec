@@ -34,6 +34,34 @@ export async function teacherPost(path: string, key: string, body?: unknown): Pr
   return parse(await fetch(`/api/teacher/${path}`, jsonInit({ "X-Teacher-Key": key }, body)));
 }
 
+export async function teacherUpload(key: string, file: File): Promise<unknown> {
+  const form = new FormData();
+  form.append("file", file);
+  return parse(await fetch("/api/teacher/import", { method: "POST", headers: { "X-Teacher-Key": key }, body: form }));
+}
+
+export async function studentSubmit(token: string, question: number, answers: string[]): Promise<unknown> {
+  return parse(await fetch("/api/student/submit", jsonInit({ "X-Team-Token": token }, { question, answers })));
+}
+
+// 老師金鑰在標頭，不能用一般連結下載；改以 fetch 取回檔案再觸發瀏覽器儲存
+export async function teacherDownload(key: string): Promise<void> {
+  const res = await fetch("/api/teacher/export", { headers: { "X-Teacher-Key": key } });
+  if (!res.ok) {
+    await parse(res);
+    return;
+  }
+  const disposition = res.headers.get("content-disposition") ?? "";
+  const match = /filename\*=UTF-8''([^;]+)/.exec(disposition);
+  const name = match ? decodeURIComponent(match[1]) : "guided-notes-result.xlsx";
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export async function publicInfo(): Promise<{ phase: string; teams: string[]; joined: string[] }> {
   return (await parse(await fetch("/api/public/info"))) as { phase: string; teams: string[]; joined: string[] };
 }
