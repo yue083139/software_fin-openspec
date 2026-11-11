@@ -1,0 +1,24 @@
+schema: spec-driven
+
+context: |
+  本專案全面使用繁體中文撰寫提案、設計、規格與任務（程式識別字與指令維持原文）。
+  產品：Vibe Coding 課堂搶答系統（NCU SE6005 期末專題）。需求基線 docs/requirements.md（編號 R-/X-/P-），
+  兩組功能一致協議與共用技術選型 docs/parity.md，專案脈絡 openspec/project.md，工程規範根目錄 CLAUDE.md。
+  技術：Python 3.12 + FastAPI + WebSocket（server），React + Vite + TypeScript（web），openpyxl 讀寫 xlsx；只在本機執行。
+  不可協商：作答隔離（搶答結束前學生端拿不到他組答案）、順位以伺服器接收序為準、Guided Notes 以表頭與合併範圍動態定位（禁寫死座標）。
+  驗收標準必須是可機械執行的指令＋期望輸出；S/B 檔另附人工驗證步驟。
+
+rules:
+  proposal:
+    - 首屏 3–5 行決策摘要，每行「選了 X／代價 Y／可被 Z 證偽」
+    - 寫明涵蓋的需求編號（docs/requirements.md）與矩陣落點（eval/acceptance/matrix.yaml）
+    - 寫明 parity：已登記 docs/parity.md 的哪一行
+    - 寫明「本卡不做」
+  design:
+    - 每條決策帶證偽欄：可證偽附指令與原樣輸出；不可證偽寫「屬取捨，理由 X」
+    - 依賴第三方函式庫或外部服務行為的決策，先跑 probes/ 下的探針並引用 probes/results/ 的輸出
+  specs:
+    - 每條 Requirement 至少一個 Scenario；涉及學生端資料的能力必含「搶答中看不到他組答案」的 Scenario
+  tasks:
+    - 先列驗收測試任務，再列實作任務（TDD）
+    - 最後一節固定為「驗證」：make gate-pr 原樣輸出、人工驗證步驟與結果、parity 同步

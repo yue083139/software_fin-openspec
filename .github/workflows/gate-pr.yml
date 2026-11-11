@@ -1,0 +1,21 @@
+name: gate-pr
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+
+jobs:
+  gate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      # 與本機開發一致；升級 OpenSpec 須同批改此行與 openspec/ 產物
+      - run: npm install -g @fission-ai/openspec@1.11.0
+      - run: uv sync --group dev
+      - run: make gate-pr
+      # 另一組 repo 不在 CI 上：此步固定印「未跑」，合併前由負責人在本機補跑
+      - run: make gate-parity SIBLING=
