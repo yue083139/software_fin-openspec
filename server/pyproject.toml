@@ -14,6 +14,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8",
+    "pytest-timeout>=2.3",
     "ruff>=0.6",
 ]
 
@@ -44,3 +45,5 @@ ignore = ["S101"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# WebSocket 測試等不到訊息時會永遠卡住；逾時即判紅，門禁不得掛起
+timeout = 30
