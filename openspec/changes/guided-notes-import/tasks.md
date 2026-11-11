@@ -15,4 +15,4 @@
 ## 3. 驗證
 - [x] 3.1 驗收 #3 無寫死座標 grep 原樣輸出
 - [ ] 3.2 `make gate-pr` 原樣輸出、人工驗證寫入 `verification.md`（門禁已記錄，人工驗證待負責人）
-- [ ] 3.3 `docs/parity.md` 狀態更新、`make gate-parity` 綠
+- [x] 3.3 `docs/parity.md` 狀態更新、`make gate-parity` 綠
