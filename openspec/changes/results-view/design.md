@@ -6,7 +6,7 @@
 
 ### D1 結果資料結構（老師與學生共用）
 
-`results.build(activity) -> list[QuestionResult]`：每題 `number`、`slot_labels`、`ranking`（目前 `ScoringRule.rank` 的輸出：組別、答案、順位、是否得主、分數）、`winner`（組別與答案或 null）；另有 `team_scores`：由 `ScoringRule.team_scores` 產生（經典規則＝各組得題數）。老師 view 的 `board` 與學生 view 的 `results` 都呼叫同一個函式。
+`results.build(activity) -> list[QuestionResult]`：每題 `number`、`labels`、`ranking`（目前 `ScoringRule.rank` 的輸出：組別、答案、順位、是否得主、分數）、`winner`（組別與答案或 null）；另有 `team_scores`：由 `ScoringRule.team_scores` 產生（經典規則＝各組得題數）。老師 view 的 `board` 與學生 view 的 `results` 都呼叫同一個函式。
 
 - 證偽欄｜可證偽：`test_results_view.py::test_teacher_and_student_agree`。
 

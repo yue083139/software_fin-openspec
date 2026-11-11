@@ -123,3 +123,12 @@ def test_configure_teams_rejected_while_answering(loaded_client, teacher_headers
 
 def test_configure_teams_out_of_range(client, teacher_headers):
     assert client.post("/api/teacher/teams", json={"count": 20}, headers=teacher_headers).status_code == 422
+
+
+def test_binary_frame_is_ignored(loaded_client, teacher_headers):
+    tok = join(loaded_client, "第1組")
+    with loaded_client.websocket_connect(f"/ws?role=student&token={tok}") as ws:
+        ws.receive_json()
+        ws.send_bytes(b"\x00\x01")
+        loaded_client.post("/api/teacher/start", headers=teacher_headers)
+        assert ws.receive_json()["view"]["phase"] == "answering"
