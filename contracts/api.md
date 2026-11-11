@@ -60,7 +60,7 @@
  "questions": [{"number": 1, "labels": ["（1）", "（2）"]}, {"number": 3, "labels": [""]}]}
 ```
 
-搶答中與其他非 `ended` 階段另含 `my_submissions`（只有本組：`[{question, answers}]`，不含順位、序號、他組是否送出）。`ended` 階段另含 `results`：
+所有階段都含 `my_submissions`（只有本組：`[{question, answers}]`，不含順位、序號、他組是否送出）。只有 `ended` 階段另含 `results`：
 
 ```json
 {"results": [{"number": 3, "labels": [""], "winner": {"team": "第2組", "answers": ["位址"]},

@@ -224,7 +224,11 @@ def create_app(activity: Activity | None = None, teacher_key: str | None = None,
         sender = asyncio.create_task(first_then_loop())
         try:
             while True:
-                await socket.receive_text()
+                # 客戶端送來的任何訊框（文字或二進位）一律忽略，只等斷線
+                # （實作輪紅隊：receive_text 遇二進位訊框會拋 KeyError）
+                message = await socket.receive()
+                if message["type"] == "websocket.disconnect":
+                    break
         except WebSocketDisconnect:
             pass
         finally:

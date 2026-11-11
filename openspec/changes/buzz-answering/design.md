@@ -12,7 +12,7 @@
 
 ### D2 判定規則策略
 
-`ScoringRule` 協定：`rank(submissions, judgments=None, attrs=None) -> list[Ranked]`（`team`、`answers`、`seq`、`rank`、`is_winner`、`score`）與 `team_scores(all_ranked) -> dict[組別, 分數]`；`judgments`（老師判定對錯）與 `attrs`（題目倍率、時限）是 `docs/trd-game-modes.md` T-02 的預留輸入，經典規則不使用。`ClassicBuzzRule`：依 `seq` 由小到大，`rank` 從 1 起，`is_winner = rank == 1`，得主 `score = 1`、其餘 0；`team_scores` 為各組得分總和。`Activity` 持有目前規則（預設經典），view、結果與匯出都經規則取得，不在別處重算。
+`ScoringRule` 協定：`rank(submissions, judgments=None, attrs=None) -> list[Ranked]`（`team`、`answers`、`seq`、`rank`、`is_winner`、`score`）與 `team_scores(teams, ranked) -> dict[組別, 分數]`；`judgments`（老師判定對錯）與 `attrs`（題目倍率、時限）是 `docs/trd-game-modes.md` T-02 的預留輸入，經典規則不使用。`ClassicBuzzRule`：依 `seq` 由小到大，`rank` 從 1 起，`is_winner = rank == 1`，得主 `score = 1`、其餘 0；`team_scores` 為各組得分總和。`Activity` 持有目前規則（預設經典），view、結果與匯出都經規則取得，不在別處重算。
 
 - 證偽欄｜可證偽：`test_scoring.py`。屬取捨部分：經典規則不判對錯；最快但寫錯的答案仍是得主（R-10 字面意義），遞補屬第二期 `mode-buzz-fallback`。
 
