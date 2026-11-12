@@ -1,4 +1,4 @@
-# game-mode-framework — design（v1.0）
+# game-mode-framework — design（v1.1）
 
 知識時點：2026-11-12。對標（`docs/research/competitors.md`）：Kahoot! 的 Accuracy 模式只看答對與否；Kahoot! 與 Quizizz 的題目都有標準答案，由系統自動判定。本系統的 Guided Notes 沒有標準答案欄（第一期範本結構探針 `probes/results/2026-11-11-guided-notes-structure.txt`：兩份範本表頭只有「題號／題目／作答」），故改為**老師判定**，有參考答案欄時只給建議（TRD §6 裁定）。
 
@@ -30,7 +30,7 @@ DEFAULT_MODE = "classic"
 - `ClassicBuzzRule`：不變，`correct=None`。
 - `AccuracyRule`（`name="accuracy"`）：依 `seq` 排 `rank`；`correct = judgments.get(team)`；`score = 1 if correct is True else 0`；`is_winner` ＝依 `seq` 第一個 `correct is True` 者（無人答對 ⇒ 無得主）。
 
-匯出取 `is_winner` 者的答案（`results.winning_answers`），故只計對錯模式寫回「最早送出的正確答案」，匯出程式不改。
+匯出取 `is_winner` 者的答案（`results.winning_answers`），故只計對錯模式寫回「最早送出的正確答案」，匯出程式不改。主規格 `buzz-answering`「順位 1 的組別為搶答成功者」只對經典模式成立，本卡以 MODIFIED 改寫為「經典模式＝順位 1；判定模式＝最早送出的正確答案」（v1.1）。
 
 - 證偽欄｜可證偽：`test_scoring.py` 表格式案例：全對、全錯、第一個錯第二個對（得主＝第二個）、部分未判定、無人作答。屬取捨：多組答對時只寫回一組。
 

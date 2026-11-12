@@ -1,4 +1,4 @@
-# game-mode-framework — tasks（v1.0）
+# game-mode-framework — tasks（v1.1）
 
 ## 1. 驗收先行
 - [ ] 1.1 `tests/fixtures/guided-notes/build_reference.py` 與 `reference.xlsx`；納入 `ops/gate_parity.py` 共用檔與夾具 README
