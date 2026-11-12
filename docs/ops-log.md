@@ -8,3 +8,5 @@ AI 代理在本 repo 執行的對外或難以回復的操作（建立 repo、推
 | 2026-11-11 | main、dev | `gh repo create yue083139/software_fin-openspec --private`，推送 `main`、由 `main` 開出並推送 `dev`（創世唯一例外，見先例正文「創世提交」） | GitHub 新增私人 repo | `gh repo delete yue083139/software_fin-openspec --yes` |
 | 2026-11-11 | feat/app-skeleton…feat/guided-notes-export | 負責人以 `!` 推送五個功能分支與標籤 `rollback/01-pre-phase1`（指向第一期前的 dev e28fc3f）；開 PR #2–#6 | GitHub 新增分支與 PR | 刪除分支；`git reset` 前先以標籤回到 e28fc3f |
 | 2026-11-11 | dev | 依負責人「合」合併：#2 入 dev；`--delete-branch` 使 #3、#5 被關閉、#4、#6 合入中間分支（事故，見先例正文「疊層 PR 的合併順序」）；開替代 PR #7（feat/results-view → dev）合入 | dev 含第一期五卡 | 以 `rollback/01-pre-phase1` 開回復分支經 PR 還原 |
+| 2026-11-12 | dev | 負責人以 `!` 合併收尾 PR（OpenSpec #8、SpecKit #7）；本機 dev 設定追蹤 origin/dev 並快轉 | dev 含第一期收尾文件 | 以 `rollback/01-pre-phase1` 開回復分支經 PR 還原 |
+| 2026-11-12 | 已合併的遠端功能分支 | 依負責人「清理分支」以 `gh api -X DELETE …/git/refs/heads/<分支>` 刪除兩 repo 共 8 支已合併遠端分支（OpenSpec 3 支、SpecKit 5 支；刪前以 `git rev-list` 與 `git diff` 確認內容皆已在 dev），並刪除對應本機分支 | GitHub 分支清單只剩 main、dev | 分支內容皆在 dev；需要時以已合併 PR 頁面的 Restore branch 還原 |
