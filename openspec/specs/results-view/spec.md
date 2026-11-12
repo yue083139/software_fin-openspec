@@ -1,7 +1,7 @@
 # results-view Specification
 
 ## Purpose
-老師即時作答狀況表與學生結束後的結果畫面。
+老師在任何階段即時檢視每題每組的答案、順位與得主，以及學生只在搶答結束後才能檢視結果、且雙方結果一致的規則。
 
 ## Requirements
 

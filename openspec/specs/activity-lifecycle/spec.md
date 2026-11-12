@@ -1,7 +1,7 @@
 # activity-lifecycle Specification
 
 ## Purpose
-活動的身分（老師金鑰、組別憑證）、組別設定、階段狀態機與 WebSocket 同步。
+活動的身分驗證（老師金鑰、組別憑證）、組數設定、活動階段狀態機，以及以 WebSocket 把各連線自己的畫面狀態同步給老師與學生的規則。
 
 ## Requirements
 

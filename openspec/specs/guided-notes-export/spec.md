@@ -1,7 +1,7 @@
 # guided-notes-export Specification
 
 ## Purpose
-把每題得主答案寫回原 Guided Notes 的作答格並匯出 xlsx。
+搶答結束後，把每題得主的答案依匯入時記下的作答格位置寫回原 Guided Notes，並以 xlsx 檔下載的規則。
 
 ## Requirements
 

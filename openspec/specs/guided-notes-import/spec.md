@@ -1,7 +1,7 @@
 # guided-notes-import Specification
 
 ## Purpose
-以表頭與合併範圍動態定位，匯入 Guided Notes（xlsx 檔或 Google 試算表連結）為題目清單。
+以表頭文字與合併範圍動態定位，從 xlsx 檔或 Google 試算表連結匯入 Guided Notes 為題目清單，且學生只看得到題號與子題結構的規則。
 
 ## Requirements
 

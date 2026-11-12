@@ -1,7 +1,7 @@
 # buzz-answering Specification
 
 ## Purpose
-各組送出答案、伺服器接收序判定順位、作答隔離。
+各組以組別憑證送出答案、伺服器依接收序判定順位與搶答成功者，以及搶答結束前不讓學生看到他組作答狀況的作答隔離規則。
 
 ## Requirements
 
