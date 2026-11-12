@@ -1,4 +1,4 @@
-# game-mode-framework — design（v1.1）
+# game-mode-framework — design（v1.2）
 
 知識時點：2026-11-12。對標（`docs/research/competitors.md`）：Kahoot! 的 Accuracy 模式只看答對與否；Kahoot! 與 Quizizz 的題目都有標準答案，由系統自動判定。本系統的 Guided Notes 沒有標準答案欄（第一期範本結構探針 `probes/results/2026-11-11-guided-notes-structure.txt`：兩份範本表頭只有「題號／題目／作答」），故改為**老師判定**，有參考答案欄時只給建議（TRD §6 裁定）。
 
@@ -46,9 +46,9 @@ DEFAULT_MODE = "classic"
 | `pending_judgments()` | — | 未判定筆數 |
 | `reveal()` | `judging`（409）；`pending_judgments() == 0`，否則 `PhaseError("尚有 N 筆未判定")` | 轉 `ENDED` |
 
-`end()` 加 `_require(ANSWERING)` 是因為轉移表允許 `judging → ended`：不擋的話老師在判定中按「結束搶答」即可繞過未判定檢查。檢查與寫入之間照第一期慣例放 `_checkpoint()`。
+`end()` 加 `_require(ANSWERING)`，把「結束搶答只在搶答中」寫成明確前置條件。v1.2 更正：判定模式下 `end()` 的目標是 `judging`，`judging → judging` 不在轉移表，拿掉此行仍回 409（變異實錄），所以它不是唯一防線；v1.0 說「不擋即可繞過未判定檢查」不成立。檢查與寫入之間照第一期慣例放 `_checkpoint()`。
 
-- 證偽欄｜可證偽：`test_judging.py`：判定中 `POST /end` ⇒ 409 且仍為 `judging`；有未判定時 `reveal` ⇒ 409；全部判定後 `reveal` ⇒ `ended`；判定不存在的送出 ⇒ 404；`answering`／`ended` 判定 ⇒ 409；改判覆蓋前值；`test_concurrent_reveal_and_judge`：最後一筆判定與揭曉並發 20 輪，揭曉成功時必然沒有未判定（拿掉鎖時以讓出點使其交錯）。變異實錄：拿掉 `reveal` 的未判定檢查、拿掉 `end` 的 `_require(ANSWERING)`，對應測試必紅。
+- 證偽欄｜可證偽：`test_judging.py`：判定中 `POST /end` ⇒ 409 且仍為 `judging`；有未判定時 `reveal` ⇒ 409；全部判定後 `reveal` ⇒ `ended`；判定不存在的送出 ⇒ 404；`answering`／`ended` 判定 ⇒ 409；改判覆蓋前值；`test_concurrent_judge_and_accept_suggestions`：老師把建議為錯誤的送出判為正確，與「採用全部建議」並發 20 輪，最終必為老師的判定（`accept_suggestions` 在讀出未判定清單與寫入之間讓出）。變異實錄：拿掉 `reveal` 的未判定檢查必紅；`judge` 或 `accept_suggestions` 換成每次新建的鎖必紅。v1.0 的 `test_concurrent_reveal_and_judge` 拿掉鎖仍綠（`reveal` 讀未判定數之前沒有讓出點），已換掉。
 
 ### D4 參考答案欄與判定建議
 
