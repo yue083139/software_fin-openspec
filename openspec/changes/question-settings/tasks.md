@@ -1,7 +1,7 @@
-# question-settings — tasks（v1.0）
+# question-settings — tasks（v1.1）
 
 ## 1. 驗收先行
-- [ ] 1.1 `server/tests/test_scoring.py::test_multiplier_doubles`（D1）
+- [ ] 1.1 `server/tests/test_scoring.py::test_multiplier_doubles`（D1）；改寫第一期 `test_reserved_inputs_do_not_change_classic`（judgments 不影響經典規則、`QuestionAttrs(2)` 分數加倍）
 - [ ] 1.2 `server/tests/test_question_settings.py`（D2、D3）
 - [ ] 1.3 `eval/acceptance/matrix.yaml` M-013
 - [ ] 1.4 web：`web/src/pages/settings.test.tsx`（D4）

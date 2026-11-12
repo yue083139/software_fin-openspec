@@ -1,4 +1,4 @@
-# question-settings — 題目設定：雙倍分數題（v1.0）
+# question-settings — 題目設定：雙倍分數題（v1.1）
 
 檔位：**S**（`contracts/` 增端點；TRD §5 原建議 B，依分檔表「命中任一取最高」改 S）｜主人：@yue083139｜parity：`docs/parity.md` §4 `question-settings`｜需求：X-04（TRD T-05 倍率）｜依賴：`game-mode-framework`
 
@@ -9,6 +9,8 @@
 3. **只在準備階段可設；重新匯入清除、重置活動保留**：代價：搶答中發現設錯只能結束後重置重來／屬取捨，理由：搶答中改倍率會改變已作答組別的期望分數，不公平。
 4. **學生看得到哪些題是雙倍**：對標 Kahoot（題目出現前顯示 Double points）；倍率不是他組資訊，不受作答隔離限制。
 5. **分數欄名由伺服器決定**：經典搶答且全部倍率為 1 時為「得題數」，其餘「得分」（`score_label`），前端不自行判斷。
+
+**v1.1（提案輪評審）**：雙倍題讓經典模式的 `score` 可為 2，屬契約既有欄位的**語意補充**（D3 列出 `contracts/api.md` 兩句的改法，呈負責人批准）；第一期 `test_reserved_inputs_do_not_change_classic` 斷言經典規則忽略倍率，本卡改寫它（tasks 1.1）。
 
 **矩陣落點**：新增 M-013（雙倍分數題）。
 
