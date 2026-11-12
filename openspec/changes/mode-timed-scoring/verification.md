@@ -78,3 +78,21 @@ Totals: 8 passed, 0 failed (8 items)
 gate-agents: 0 處漂移
 gate-parity: 0 處不一致
 ```
+
+## 實作輪評審補測（2026-11-12）
+
+紅隊實作輪 `CLEARED`，另指出三處「程式對、測試守不住」（變異後仍綠）。已補測試，變異改為必紅：
+
+```
+== R1 作答毫秒改回自開始搶答（刪 opened_at = rnd.opened_at）
+FAILED tests/test_timed_mode.py::test_open_in_order_and_only_current_accepted
+1 failed, 16 passed, 1 warning in 2.35s
+== R2 重置不清回合（刪 self.rounds = {}）
+FAILED tests/test_timed_mode.py::test_reset_clears_rounds_and_timer - Asserti...
+1 failed, 16 passed, 1 warning in 2.32s
+== R3 採用建議不檢查回合已關閉（刪 _require_judgeable）
+FAILED tests/test_timed_mode.py::test_judge_and_reveal_preconditions - Failed...
+1 failed, 16 passed, 1 warning in 2.36s
+```
+
+架構通道實作輪 1 重要（契約 `judge`／`accept-suggestions` 未補時間計分語意）、2 次要（名次「空陣列」字句、008 時序圖晚送訊息）已修，見 `contracts/api.md`、design D5／D6、SpecKit 008 圖與核對表。

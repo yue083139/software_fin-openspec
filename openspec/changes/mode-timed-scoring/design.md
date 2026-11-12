@@ -76,7 +76,7 @@ T=30,t=2: 966.6666666666666 -> 967
 - 學生 view（逐題模式、非 `ended`）增：
   - `revealed: [{question, submitted, correct, score}]`——**只有本組**，只列已揭曉題；
   - `my_total`——本組在已揭曉題的累積分數；
-  - `leaderboard: [{team, rank}]`——全部組別依**已揭曉題**累積分數的名次（同分同名次，下一名跳號，如 1、1、3），依名次再依組別順序排列；**不含他組分數**（v1.1：分數可反推作答秒數）；尚無揭曉題時為空陣列。
+  - `leaderboard: [{team, rank}]`——全部組別依**已揭曉題**累積分數的名次（同分同名次，下一名跳號，如 1、1、3），依名次再依組別順序排列；**不含他組分數**（v1.1：分數可反推作答秒數）；尚無揭曉題時全部組別同為第 1 名（v1.2：原寫「空陣列」與實作不符，已回寫）。
   - 他組答案、分數、順位、作答秒數一律不送；`ended` 照舊加完整 `results` 與 `team_scores`。
 - 老師 view 照舊有完整 `board`（即時）；另有 `leaderboard: [{team, rank, score}]`（含分數）。
 - 推播：他組送出不改本組 view ⇒ 不推；開題、關閉、揭曉改變所有人的 view ⇒ 全推。
@@ -90,7 +90,8 @@ T=30,t=2: 966.6666666666666 -> 967
 | `POST /api/teacher/open-next` | `{question}` | 401；409 非 answering、非逐題模式、目前題未揭曉、已無題目 |
 | `POST /api/teacher/close-question` | `{question}` | 401；409 沒有進行中的題目 |
 | `POST /api/teacher/reveal-question` | `{question}` | 401；409 未關閉或尚有未判定 |
-| `POST /api/student/submit`（語意補充） | 同前 | 409 增「這一題目前沒有開放作答」「本題作答時間已到」 |
+| `POST /api/student/submit`（語意補充） | 同前 | 409 增「這一題目前沒有開放作答」（未開放或已關閉）「本題作答時間已到」（已過時限、計時器尚未關閉） |
+| `POST /api/teacher/judge`、`/accept-suggestions`（語意補充，v1.2） | 同前 | 時間計分在 `answering` 內判定：409 改為「非 answering，或該題未關閉／已揭曉」；採用建議只處理目前已關閉的那一題 |
 
 ### D7 web
 
