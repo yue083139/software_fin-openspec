@@ -1,4 +1,4 @@
-# mode-timed-scoring — design（v1.0）
+# mode-timed-scoring — design（v1.1）
 
 知識時點：2026-11-12。對標：Kahoot!「How points work」：答對得分隨作答時間遞減、0.5 秒內滿分、答錯 0 分；每題有時限，主持人逐題推進，每題結束顯示正解與排行榜（`docs/research/competitors.md`）。裁剪：沒有標準答案 ⇒ 每題多一步「老師判定」；排行榜只公開分數不公開答案。
 
@@ -8,11 +8,15 @@
 
 `Mode` 增 `sequential: bool`（經典、只計對錯為 `False`）。新增 `MODES["timed"] = Mode("timed", "時間計分", judged=False, sequential=True, rule=TimedRule())`——逐題模式的判定在每題關閉後、仍在 `answering` 階段內完成，不使用全域 `judging`。
 
-- 證偽欄｜可證偽：`test_modes.py` 登記表三種模式。
+老師與學生 view 的 `mode` 增 `sequential`，前端據此決定是否顯示逐題控制，不比對模式鍵（v1.1）。
+
+- 證偽欄｜可證偽：`test_modes.py` 登記表三種模式；`test_timed_mode.py::test_view_mode_has_sequential`。
 
 ### D2 題目時限
 
 `QuestionAttrs` 增 `time_limit: int = 20`（秒，5–120；預設值屬取捨）。`POST /api/teacher/question-settings` 本體改為 `{question, multiplier?, time_limit?}`，至少一個欄位（否則 422），各自驗範圍；回應含兩欄。`questions[]` 增 `time_limit`。
+
+契約語意補充（v1.1）：`question-settings` 本體由 007 的必填 `multiplier` 放寬為兩欄皆可選、至少一欄——既有只送 `multiplier` 的呼叫照舊有效。
 
 - 證偽欄｜可證偽：`test_question_settings.py` 增時限錯誤碼與「只給一欄不動另一欄」。
 
@@ -41,20 +45,22 @@ class Round:
 | `judge()`／`accept_suggestions()`（逐題模式） | 該題回合已關閉且未揭曉（否則 409） | 同 game-mode-framework D3 |
 | `end()`（逐題模式） | `answering` 且 `current is None` | 轉 `ended`（未開放的題目無送出、無得主） |
 
-計時器：`open_next` 以 `asyncio.create_task` 起一個「睡到截止再 `close_due()`」的任務；`reset`、`load_questions` 取消並清空回合。截止判斷**在送出路徑**以時鐘比對，計時器只決定何時推送「已關閉」，所以計時器晚到不會多收逾時答案。非逐題模式的 `elapsed_ms` 仍自開始搶答起算（全部題目同時開放，等同自開題起算）。
+計時器：`open_next` 以 `asyncio.create_task` 起一個任務，**迴圈**「睡到剩餘時間 → `close_due()`」，直到該回合已關閉或已不是 `current` 才結束（v1.1 紅隊實測：Windows 上 asyncio 計時解析度 15.6 毫秒，60 次中有 1 次提早約 3 毫秒醒來；單次睡眠會讓 `close_due` 看到未到時而不關、之後再無人關閉）。**送出路徑只讀一次時鐘**：在讓出點之前讀 `now = clock()`，截止比對與 `elapsed_ms` 都用同一個 `now`（v1.1，兩通道）。`reset`、`load_questions` 取消並清空回合。截止判斷**在送出路徑**以時鐘比對，計時器只決定何時推送「已關閉」，所以計時器晚到不會多收逾時答案。非逐題模式的 `elapsed_ms` 仍自開始搶答起算（全部題目同時開放，等同自開題起算）。
 
-- 證偽欄｜可證偽：`test_timed_mode.py`（假時鐘）：開題順序；送出非開放題 409；時鐘停在 `limit + 0.001` 送出 409、停在 `limit` 送出成功；`close_due` 於截止前不關、截止後關且推送；`elapsed_ms` 等於假時鐘差；未揭曉時 `open_next` 與 `end` 409；未關閉時判定 409；有未判定時揭曉 409；`test_concurrent_close_and_submit`：截止與送出並發 20 輪，被接受的送出其 `elapsed_ms ≤ limit × 1000`。變異實錄：拿掉送出路徑的截止比對，逾時測試必紅。
+- 證偽欄｜可證偽：`test_timed_mode.py`（假時鐘）：開題順序；送出非開放題 409；時鐘停在 `limit + 0.001` 送出 409、停在 `limit` 送出成功；`close_due` 於截止前不關、截止後關且推送；`test_timer_retries_after_early_wake`（假時鐘讓第一次醒來時尚差 3 毫秒，任務必再睡一次並關閉）；`elapsed_ms` 等於假時鐘差；未揭曉時 `open_next` 與 `end` 409；未關閉時判定 409；有未判定時揭曉 409；`test_concurrent_close_and_submit`：截止與送出並發 20 輪，被接受的送出其 `elapsed_ms ≤ limit × 1000`。變異實錄：拿掉送出路徑的截止比對，逾時測試必紅。
 
 ### D4 計分
 
 ```python
 def timed_points(elapsed_ms: int, limit: int, multiplier: int) -> int:
-    t = elapsed_ms / 1000
-    base = 1000 if t <= 0.5 else math.floor(1000 * (1 - min(t, limit) / limit / 2) + 0.5)
+    ms = min(max(elapsed_ms, 0), limit * 1000)
+    base = 1000 if ms <= 500 else (2001 * limit - ms) // (2 * limit)
     return base * multiplier
 ```
 
-`TimedRule`：依 `seq` 排 `rank`；`correct = judgments.get(team)`；正確者 `score = timed_points(...)`，其餘 0；得主＝最早的正確送出（匯出寫回它）。四捨五入不用 Python `round`：
+`(2001T − ms) // (2T)` 與 `floor(1000 × (1 − ms ÷ 1000 ÷ T ÷ 2) + 0.5)` 代數相等（通分）；以 `fractions.Fraction` 精確值窮舉 T＝5–120、ms＝501–T×1000，不一致 0 例。浮點寫法同範圍有 5129 例少 1 分（v1.1 紅隊）。
+
+`TimedRule`：依 `seq` 排 `rank`；`correct = judgments.get(team)`；正確者 `score = timed_points(...)`，其餘 0；得主＝最早的正確送出（匯出寫回它）。不用 Python `round`（銀行家捨入）：
 
 ```
 $ uv run --project server python -c "...round(0.5), round(2.5), round(999.5)..."
@@ -62,19 +68,20 @@ round(0.5)= 0 round(2.5)= 2 round(999.5)= 1000
 T=30,t=2: 966.6666666666666 -> 967
 ```
 
-- 證偽欄｜可證偽：`test_scoring.py::test_timed_points`：(400 ms, 20) ⇒ 1000；(20000, 20) ⇒ 500；(2000, 30) ⇒ 967；倍率 2 ⇒ 兩倍；`TimedRule` 錯誤 0 分、得主為最早正確者。
+- 證偽欄｜可證偽：`test_scoring.py::test_timed_points`：(400 ms, 20) ⇒ 1000；(20000, 20) ⇒ 500；(2000, 30) ⇒ 967；(1285, 5) ⇒ 872（點五案例）；倍率 2 ⇒ 兩倍；`TimedRule` 錯誤 0 分、得主為最早正確者。
 
 ### D5 view 與隔離
 
 - 老師與學生 view 增 `round: {question, state: "open"|"closed", deadline_epoch_ms} | null`（`current` 的公開狀態；同一時間對所有人相同，不含任何組別資訊）。
 - 學生 view（逐題模式、非 `ended`）增：
   - `revealed: [{question, submitted, correct, score}]`——**只有本組**，只列已揭曉題；
-  - `leaderboard: [{team, score}]`——全部組別在**已揭曉題**的累積分數，分數高者在前、同分依組別順序；尚無揭曉題時為空陣列。
-  - 他組答案、順位、作答秒數一律不送；`ended` 照舊加完整 `results`。
-- 老師 view 照舊有完整 `board`（即時）；另有同格式 `leaderboard`。
+  - `my_total`——本組在已揭曉題的累積分數；
+  - `leaderboard: [{team, rank}]`——全部組別依**已揭曉題**累積分數的名次（同分同名次，下一名跳號，如 1、1、3），依名次再依組別順序排列；**不含他組分數**（v1.1：分數可反推作答秒數）；尚無揭曉題時為空陣列。
+  - 他組答案、分數、順位、作答秒數一律不送；`ended` 照舊加完整 `results` 與 `team_scores`。
+- 老師 view 照舊有完整 `board`（即時）；另有 `leaderboard: [{team, rank, score}]`（含分數）。
 - 推播：他組送出不改本組 view ⇒ 不推；開題、關閉、揭曉改變所有人的 view ⇒ 全推。
 
-- 證偽欄｜可證偽：`test_isolation.py::test_timed_mode_isolated`（開放中、已關閉、已揭曉三狀態下 B 組全部位元組不含 A 組答案字串）、`test_timed_other_team_submit_sends_nothing`、`test_leaderboard_counts_revealed_only`（關閉未揭曉時排行榜不含該題分數）。
+- 證偽欄｜可證偽：`test_isolation.py::test_timed_mode_isolated`（開放中、已關閉、已揭曉三狀態下 B 組全部位元組不含 A 組答案字串）、`test_timed_other_team_submit_sends_nothing`、`test_leaderboard_counts_revealed_only`（關閉未揭曉時名次不反映該題）；`test_student_leaderboard_has_no_scores`（學生 `leaderboard` 每項只有 `team`、`rank` 兩鍵，且 B 組 payload 不含 A 組累積分數的數字字串）。
 
 ### D6 API（`contracts/api.md` 只增不改）
 

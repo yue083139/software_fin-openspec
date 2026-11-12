@@ -1,4 +1,4 @@
-# mode-timed-scoring — tasks（v1.0）
+# mode-timed-scoring — tasks（v1.1）
 
 ## 1. 驗收先行
 - [ ] 1.1 `server/tests/test_scoring.py::test_timed_points`、`TimedRule` 表格式（D4）
