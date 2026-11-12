@@ -1,6 +1,6 @@
-# mode-timed-scoring — design（v1.1）
+# mode-timed-scoring — design（v1.2）
 
-知識時點：2026-11-12。對標：Kahoot!「How points work」：答對得分隨作答時間遞減、0.5 秒內滿分、答錯 0 分；每題有時限，主持人逐題推進，每題結束顯示正解與排行榜（`docs/research/competitors.md`）。裁剪：沒有標準答案 ⇒ 每題多一步「老師判定」；排行榜只公開分數不公開答案。
+知識時點：2026-11-12。對標：Kahoot!「How points work」：答對得分隨作答時間遞減、0.5 秒內滿分、答錯 0 分；每題有時限，主持人逐題推進，每題結束顯示正解與排行榜（`docs/research/competitors.md`）。裁剪：沒有標準答案 ⇒ 每題多一步「老師判定」；學生端排行榜只公開名次，不公開他組分數與答案（v1.1）。
 
 ## 決策
 
@@ -47,7 +47,7 @@ class Round:
 
 計時器：`open_next` 以 `asyncio.create_task` 起一個任務，**迴圈**「睡到剩餘時間 → `close_due()`」，直到該回合已關閉或已不是 `current` 才結束（v1.1 紅隊實測：Windows 上 asyncio 計時解析度 15.6 毫秒，60 次中有 1 次提早約 3 毫秒醒來；單次睡眠會讓 `close_due` 看到未到時而不關、之後再無人關閉）。**送出路徑只讀一次時鐘**：在讓出點之前讀 `now = clock()`，截止比對與 `elapsed_ms` 都用同一個 `now`（v1.1，兩通道）。`reset`、`load_questions` 取消並清空回合。截止判斷**在送出路徑**以時鐘比對，計時器只決定何時推送「已關閉」，所以計時器晚到不會多收逾時答案。非逐題模式的 `elapsed_ms` 仍自開始搶答起算（全部題目同時開放，等同自開題起算）。
 
-- 證偽欄｜可證偽：`test_timed_mode.py`（假時鐘）：開題順序；送出非開放題 409；時鐘停在 `limit + 0.001` 送出 409、停在 `limit` 送出成功；`close_due` 於截止前不關、截止後關且推送；`test_timer_retries_after_early_wake`（假時鐘讓第一次醒來時尚差 3 毫秒，任務必再睡一次並關閉）；`elapsed_ms` 等於假時鐘差；未揭曉時 `open_next` 與 `end` 409；未關閉時判定 409；有未判定時揭曉 409；`test_concurrent_close_and_submit`：截止與送出並發 20 輪，被接受的送出其 `elapsed_ms ≤ limit × 1000`。變異實錄：拿掉送出路徑的截止比對，逾時測試必紅。
+- 證偽欄｜可證偽：`test_timed_mode.py`（假時鐘）：開題順序；送出非開放題 409；時鐘停在 `limit + 0.001` 送出 409、停在 `limit` 送出成功（v1.2：兩情況各用一個新活動——同一活動中時鐘一過時限，計時器會在送出的讓出點先把回合關閉，第二筆拿到的是「沒有開放」而非「時間已到」，測不到送出路徑本身的比對）；`close_due` 於截止前不關、截止後關且推送；`test_timer_retries_after_early_wake`（假時鐘讓第一次醒來時尚差 3 毫秒，任務必再睡一次並關閉）；`elapsed_ms` 等於假時鐘差；未揭曉時 `open_next` 與 `end` 409；未關閉時判定 409；有未判定時揭曉 409；`test_concurrent_close_and_submit`：老師提早結束與送出並發 20 輪，先開始的關閉生效後送出必被拒（v1.2：原寫「被接受的送出 `elapsed_ms ≤ limit × 1000`」在假時鐘下恆真、測不到鎖，改為此斷言；拿掉鎖時送出會在關閉後被記錄）；`test_api_round_flow_and_scores`、`test_time_limit_settings`、`test_leaderboard_counts_revealed_only`、`test_student_leaderboard_has_no_scores`。變異實錄：拿掉送出路徑的截止比對、計時器只睡一次、`close_question` 拿掉鎖、學生名次帶分數，各自對應的測試必紅（`verification.md`）。
 
 ### D4 計分
 
@@ -81,7 +81,7 @@ T=30,t=2: 966.6666666666666 -> 967
 - 老師 view 照舊有完整 `board`（即時）；另有 `leaderboard: [{team, rank, score}]`（含分數）。
 - 推播：他組送出不改本組 view ⇒ 不推；開題、關閉、揭曉改變所有人的 view ⇒ 全推。
 
-- 證偽欄｜可證偽：`test_isolation.py::test_timed_mode_isolated`（開放中、已關閉、已揭曉三狀態下 B 組全部位元組不含 A 組答案字串）、`test_timed_other_team_submit_sends_nothing`、`test_leaderboard_counts_revealed_only`（關閉未揭曉時名次不反映該題）；`test_student_leaderboard_has_no_scores`（學生 `leaderboard` 每項只有 `team`、`rank` 兩鍵，且 B 組 payload 不含 A 組累積分數的數字字串）。
+- 證偽欄｜可證偽：`test_isolation.py::test_timed_mode_isolated`（開放中、已關閉、已揭曉三狀態下 B 組全部位元組不含 A 組答案字串）、`test_timed_other_team_submit_sends_nothing`、`test_leaderboard_counts_revealed_only`（關閉未揭曉時名次不反映該題）；`test_student_leaderboard_has_no_scores`（學生 `leaderboard` 每項的鍵集合恰為 `{team, rank}`，且學生 view 中沒有任何鍵為 `score` 的他組項目；不以數字子字串比對——13 位數的 `deadline_epoch_ms` 可能碰巧含同樣數字而假紅，v1.1 回驗）。
 
 ### D6 API（`contracts/api.md` 只增不改）
 
