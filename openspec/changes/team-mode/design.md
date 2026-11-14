@@ -23,6 +23,7 @@
   3. 組隊開啟且該組**沒有邀請碼**（從未有人加入）：發憑證並產生邀請碼。
 - **開始搶答即換新所有邀請碼**（`start`）：準備階段被他組瞄到的碼在搶答中失效；搶答中要加入的組員只能向老師索取（老師 view 永遠有現行碼）。
 - `release(team)`：撤銷該組全部憑證、清該組草稿；組隊時**換新邀請碼**（只在老師 view）。被踢的冒用者不能搶先以「第一台」重新佔住該組。
+- 殘餘風險：準備階段已憑碼加入的冒用者，開始搶答換碼後憑證不會被撤銷，仍留在該組；老師可從台數看出異常並釋放整組。
 - `devices(team)`＝該組已發出的憑證數。憑證存在分頁的 sessionStorage，關分頁不會釋放名額；名額不夠時老師只能釋放整組、組員以新碼重新加入（屬取捨：單台釋放需要裝置識別與在線偵測，超出本卡範圍；6 台高於一般分組人數）。
 
 - 證偽欄｜可證偽：`test_team_mode.py::test_join_requires_code`（無碼、錯碼、截短碼 403 且不發憑證；小寫與前後空白可）、`test_fullwidth_code_accepted`、`test_single_device_without_team_play_unchanged`、`test_device_limit`（滿後錯碼仍 403）、`test_concurrent_join_at_limit`（6 台後並發 5 次恰 0 成功；5 台後恰 1 成功）、`test_concurrent_first_join_one_code`、`test_release_revokes_all_devices_and_code`（釋放後無碼、舊碼 403，新碼可加入）、`test_code_rotates_on_start_and_hidden_from_students`。
