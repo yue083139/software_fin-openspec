@@ -45,7 +45,7 @@ FAILED server\tests\test_phases.py::test_concurrent_join_same_team_once - ass...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待負責人執行**（AI 不能代替人工驗證）。步驟：
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）（AI 不能代替人工驗證）。步驟：
 
 1. `make web-install` 後 `make dev`，記下終端機印出的老師頁網址。
 2. 瀏覽器開三個分頁：老師頁網址、首頁選「第1組」、首頁選「第2組」。

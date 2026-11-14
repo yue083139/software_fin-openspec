@@ -43,7 +43,7 @@ FAILED server\tests\test_submit.py::test_concurrent_same_team_same_question
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待負責人執行**。步驟：
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。步驟：
 
 1. `make dev`；老師頁匯入 `group.xlsx`；兩個分頁分別加入第1組、第2組。
 2. 老師按開始。第1組對第 3 題送出「甲」，第2組對第 3 題送出「乙」；第1組對第 1 題只填一個子題，按鈕應無法按。

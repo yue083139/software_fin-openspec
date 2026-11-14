@@ -57,7 +57,7 @@ gate-agents: 0 處漂移
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待負責人執行**。步驟：
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。步驟：
 
 1. `make dev`；匯入課程「題組＋單題範本」；兩組各搶幾題（含一題題組）；老師結束。
 2. 按「匯出 Guided Notes」，下載的檔名為「group-搶答結果.xlsx」（或「Google 試算表-搶答結果.xlsx」）。

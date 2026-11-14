@@ -51,7 +51,7 @@ FAILED tests/test_timed_mode.py::test_student_leaderboard_has_no_scores - ass...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待負責人執行**。
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。
 
 1. `make dev`，老師匯入 `group.xlsx`，模式選「時間計分」；題目清單出現每題「時限」欄，把第 1 題設 10 秒。
 2. 開兩個學生分頁（第1組、第2組），老師按「開始搶答」→「開放下一題」。學生只看到第 1 題與倒數；第 2 題以後看不到輸入欄。
