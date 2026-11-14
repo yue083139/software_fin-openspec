@@ -14,7 +14,7 @@
 
 偏離：無（v1.1 的藥方先改稿、後改碼）。
 
-## 契約語意補充（待負責人批准）
+## 契約語意補充（負責人 2026-11-14 批准）
 
 見 design D7 四條。組隊關閉時與第一期相同：`test_api_skeleton.py::test_join_once_per_team`、`test_phases.py::test_concurrent_join_same_team_once` 未改仍綠。
 

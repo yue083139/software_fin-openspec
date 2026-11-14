@@ -65,7 +65,7 @@
 
 **新增**：`POST /api/teacher/team-play`（`{enabled}` ⇒ `{team_play}`；401／409 非 preparing／422）、`POST /api/student/draft`（D4）；`/api/public/info` 增 `team_play`；老師 view 增 `team_play`、`devices`、`invite_codes`；學生 view 增 `team_play`、`invite_code`、`drafts`。
 
-**語意補充（v1.1，呈負責人批准）**——`contracts/api.md` 以下既有字句在組隊時語意改變（組隊關閉時與第一期相同）：
+**語意補充（v1.1，負責人 2026-11-14 批准）**——`contracts/api.md` 以下既有字句在組隊時語意改變（組隊關閉時與第一期相同）：
 
 1. 身分表「組別憑證（一組一台裝置）」⇒ 補「組隊時一組最多 6 台，第二台起憑邀請碼加入」。
 2. `POST /api/student/join` 本體 `{team}` ⇒ `{team, code?}`；錯誤增 403「邀請碼不正確」；409 在組隊時改指「此組裝置已滿」。
