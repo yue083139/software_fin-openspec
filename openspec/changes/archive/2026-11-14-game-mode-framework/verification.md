@@ -64,7 +64,7 @@ FAILED tests/test_judging.py::test_concurrent_judge_and_accept_suggestions - ...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待負責人執行**。
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。
 
 1. `make dev`，開老師頁與兩個學生分頁（第1組、第2組）；老師匯入 `tests/fixtures/guided-notes/reference.xlsx`。
 2. 老師「模式」選「只計對錯」；兩個學生分頁都顯示「模式：只計對錯」。開始搶答後模式單選應停用。
