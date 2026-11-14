@@ -14,7 +14,7 @@
 | D4 web | `web/src/pages/ImportPanel.tsx` `QuestionList`（勾選框）、`DoubleTag`；`AnswerForm.tsx`、`Results.tsx` 標記；`settings.test.tsx` |
 | 第一期測試改寫 | `server/tests/test_scoring.py::test_judgments_do_not_change_classic`（原 `test_reserved_inputs_do_not_change_classic`）；`test_api_import.py::test_upload_broadcasts_questions` 期望值加 `multiplier`（只增欄位） |
 
-## 契約語意補充（待負責人批准）
+## 契約語意補充（負責人 2026-11-14 批准）
 
 `contracts/api.md`：經典規則得主得「1 × 該題倍率」分；`team_scores` 欄名見 `score_label`。欄位與型別不變，只有數值範圍變大（design D3）。
 
