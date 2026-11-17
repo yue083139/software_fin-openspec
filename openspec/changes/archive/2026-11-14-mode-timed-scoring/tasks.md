@@ -16,5 +16,5 @@
 
 ## 3. 驗證
 - [x] 3.1 真棧探針 `probes/timed_flow_probe.py` 原樣輸出（D8）
-- [x] 3.2 `make gate` 原樣輸出、變異實錄、人工驗證步驟寫入 `verification.md`（人工驗證步驟已寫，待負責人執行）
+- [x] 3.2 `make gate` 原樣輸出、變異實錄、人工驗證步驟寫入 `verification.md`（人工驗證 2026-11-17 組員執行，全部符合）
 - [x] 3.3 `docs/parity.md` 狀態更新、`make gate-parity` 綠

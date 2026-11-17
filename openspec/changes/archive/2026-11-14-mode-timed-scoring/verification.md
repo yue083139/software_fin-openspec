@@ -51,7 +51,7 @@ FAILED tests/test_timed_mode.py::test_student_leaderboard_has_no_scores - ass...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 D）。
 
 1. `make dev`，老師匯入 `group.xlsx`，模式選「時間計分」；題目清單出現每題「時限」欄，把第 1 題設 10 秒。
 2. 開兩個學生分頁（第1組、第2組），老師按「開始搶答」→「開放下一題」。學生只看到第 1 題與倒數；第 2 題以後看不到輸入欄。
@@ -60,7 +60,7 @@ FAILED tests/test_timed_mode.py::test_student_leaderboard_has_no_scores - ass...
 5. 老師判第1組正確 →「揭曉本題」：第1組看到「本組答對，+9xx 分」；第2組看到「本組未作答」與名次表，名次表**沒有分數欄**；開發者工具的 WebSocket 訊息中看不到第1組答案與分數。
 6. 老師未揭曉時「開放下一題」「結束活動」停用；揭曉後可開下一題或結束活動，結束後學生看到完整結果與各組分數。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 D）。
 
 ## 門禁原樣輸出（2026-11-12，本機 Windows）
 
