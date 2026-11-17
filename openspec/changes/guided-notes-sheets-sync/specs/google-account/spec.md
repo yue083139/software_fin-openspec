@@ -21,11 +21,15 @@
 
 ### Requirement: OAuth 回呼只接受伺服器發出的 state
 
-OAuth 回呼 MUST 只接受由已驗證老師請求產生、未過期且未使用過的 `state`；其餘 MUST 回 400 且 MUST NOT 換取權杖。
+OAuth 回呼 MUST 只接受由已驗證老師請求產生、未過期、未使用過，且與發起登入的瀏覽器 cookie 相符的 `state`；其餘 MUST 回 400 且 MUST NOT 換取權杖。回呼頁 MUST NOT 回顯任何查詢參數。
 
 #### Scenario: 偽造 state
 - **WHEN** 有人以伺服器未發出的 `state` 呼叫回呼
 - **THEN** 伺服器 MUST 回 400，登入狀態 MUST NOT 改變
+
+#### Scenario: 另一個瀏覽器拿到授權網址
+- **WHEN** 他人以老師發起的 `state` 在沒有對應 cookie 的瀏覽器完成授權並導回回呼
+- **THEN** 伺服器 MUST 回 400，MUST NOT 換取權杖，老師登入狀態 MUST NOT 改變
 
 #### Scenario: 重放 state
 - **WHEN** 同一 `state` 第二次呼叫回呼

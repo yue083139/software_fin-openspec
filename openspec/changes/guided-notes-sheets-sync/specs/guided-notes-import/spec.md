@@ -16,7 +16,7 @@
 
 #### Scenario: 以 Google 試算表連結匯入
 - **WHEN** 已登入的老師貼上「題組＋單題」範本的 `https://docs.google.com/spreadsheets/d/<id>/edit#gid=0`
-- **THEN** 伺服器 MUST 以 Sheets API 讀取該分頁的值與合併範圍，題目清單與作答格位置 MUST 與上傳同一範本的 xlsx 相同
+- **THEN** 伺服器 MUST 先以 Drive 複製一份「<原標題>-搶答結果」副本，再以 Sheets API 讀取副本該分頁的值與合併範圍，題目清單與作答格位置 MUST 與上傳同一範本的 xlsx 相同，回應 MUST 含副本連結
 - **AND** 伺服器 MUST NOT 對 `/export?format=xlsx` 發出請求
 
 #### Scenario: 未登入不得以連結匯入
