@@ -116,18 +116,18 @@
 
 ## 5. 結果表
 
-執行人：＿＿＿　日期：＿＿＿　repo／commit：＿＿＿　作業系統／瀏覽器：＿＿＿
+執行人：＿＿＿　日期：2026-11-17　repo／commit：`software_fin-openspec` `1339d44`（`dev`）　作業系統／瀏覽器：Windows 11／Chrome（含無痕）、Edge
 
 | 場次 | 對應卡 | 結果（✅／❌） | 不符之處（步驟號＋實際看到什麼） |
 |---|---|---|---|
-| A1 | `app-skeleton` | | |
-| A2 | `guided-notes-import` | | |
-| A3 | `buzz-answering` | | |
-| A4 | `results-view` | | |
-| A5 | `guided-notes-export` | | |
-| B | `game-mode-framework` | | |
-| C | `question-settings` | | |
-| D | `mode-timed-scoring` | | |
-| E | `team-mode` | | |
+| A1 | `app-skeleton` | ✅ | |
+| A2 | `guided-notes-import` | ✅ | |
+| A3 | `buzz-answering` | ✅ | |
+| A4 | `results-view` | ✅ | |
+| A5 | `guided-notes-export` | ✅ | 觀察（非不符）：`group.xlsx` 題組子題的 G、H 欄未合併，G 欄預填「（1）」、H 欄空白；現行匯出把答案接在 G 欄標籤後（「（1）答案」），H 欄維持空白。依範本版面 H 欄較像填空格，是否改寫入口徑待負責人裁（屬 S 檔，須兩組同批） |
+| B | `game-mode-framework` | ✅ | |
+| C | `question-settings` | ✅ | |
+| D | `mode-timed-scoring` | ✅ | |
+| E | `team-mode` | ✅ | |
 
 各卡原始步驟：OpenSpec 組 `openspec/changes/archive/<日期>-<卡名>/verification.md`；SpecKit 組 `specs/<NNN>-<卡名>/verification.md`。
