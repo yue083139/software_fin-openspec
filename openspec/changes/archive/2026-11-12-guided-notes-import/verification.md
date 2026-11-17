@@ -50,4 +50,4 @@ $ git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server
 3. 把課程「題組＋單題範本」的 Google 試算表連結貼到「從連結匯入」，結果應與上傳 group.xlsx 相同。
 4. 學生分頁在準備中看到題號清單，但看不到題目敘述。
 
-結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 A2）。
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 A2）。依 2026-11-17 課程補充說明，Google Sheets 直連改版合入後手冊場次 A 第 6 步須重驗。
