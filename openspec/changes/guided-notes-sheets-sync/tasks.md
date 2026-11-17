@@ -1,10 +1,10 @@
-# guided-notes-sheets-sync — tasks（v1.0 草稿）
+# guided-notes-sheets-sync — tasks（v1.1 草稿）
 
 ## 0. 提案前置（探針與裁定，未完成不送提案輪評審）
-- [ ] 0.1 負責人在 Google Cloud Console 建專案、啟用 Google Sheets API 與 Google Drive API、建「網頁應用程式」OAuth 用戶端（重新導向 URI `http://127.0.0.1:8000/api/google/callback`）、同意畫面「測試中」並登記測試使用者；`GOOGLE_CLIENT_ID`、`GOOGLE_CLIENT_SECRET` 寫入本機 `.env`（不入庫）
-- [ ] 0.2 負責人把「題組＋單題」範本複製到自己雲端硬碟，執行 `uv run --project server python probes/google_sheets_probe.py <試算表連結>`，原樣輸出存 `probes/results/<日期>-google-sheets.txt`（輸出已遮蔽權杖與 id）
-- [ ] 0.3 依探針結果定 design D1 權限範圍、D3 候選 A／B，回改 design 證偽欄（附輸出摘錄）
-- [ ] 0.4 `make probe-guided-notes` 確認 variant.xlsx 無「標籤格右側空白格」結構（D5 影響範圍）
+- [x] 0.1 負責人在 Google Cloud Console 建專案、啟用 Google Sheets API 與 Google Drive API、建「網頁應用程式」OAuth 用戶端（重新導向 URI `http://127.0.0.1:8000/api/google/callback`）、同意畫面「測試中」並登記測試使用者；`GOOGLE_CLIENT_ID`、`GOOGLE_CLIENT_SECRET` 寫入本機 `.env`（不入庫）
+- [x] 0.2 負責人把「題組＋單題」範本複製到自己雲端硬碟，執行 `uv run --project server python probes/google_sheets_probe.py <試算表連結>`，原樣輸出存 `probes/results/<日期>-google-sheets.txt`（輸出已遮蔽權杖與 id）
+- [x] 0.3 依探針結果定 design D1 權限範圍、D3 候選 A／B，回改 design 證偽欄（附輸出摘錄）
+- [x] 0.4 `make probe-guided-notes` 確認 variant.xlsx 無「標籤格右側空白格」結構（D5 影響範圍）
 - [ ] 0.5 `docs/parity.md` §4 登記本卡、§5 記變更；通知 SpecKit 組同批起稿（`specs/<NNN>-guided-notes-sheets-sync/`）
 - [ ] 0.6 提案輪評審（紅隊＋架構雙通道，1 輪）；負責人批准 `contracts/api.md` 改動（D7）
 

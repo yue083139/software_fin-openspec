@@ -1,4 +1,4 @@
-# guided-notes-sheets-sync — Guided Notes 直接串接雲端 Google Sheets 讀寫（v1.0 草稿）
+# guided-notes-sheets-sync — Guided Notes 直接串接雲端 Google Sheets 讀寫（v1.1 草稿）
 
 檔位：**S**（Guided Notes 解析與寫回口徑、`contracts/`、憑證 Google API、跨元件架構取捨）｜主人：@yue083139｜parity：`docs/parity.md` §4 `guided-notes-sheets-sync`（本卡開卡登記）｜需求：R-02、R-05（依 2026-11-17 課程補充說明）｜依賴：`guided-notes-import`、`guided-notes-export`
 
@@ -6,7 +6,7 @@
 
 1. **老師以 Google 帳號 OAuth 登入，伺服器直接以 Sheets API 讀寫試算表**：選了授權碼流程＋PKCE、權杖只放伺服器記憶體／代價：須在 Google Cloud 建 OAuth 用戶端、同意畫面「測試中」只放行登記的測試帳號／可被探針 `probes/google_sheets_probe.py` 證偽（登入→讀取→建立副本→寫入四步任一失敗即推翻）。
 2. **讀取：Sheets API 的儲存格值＋合併範圍轉成記憶體內工作表，沿用現行表頭／合併範圍解析**：代價：只取值與合併，不取格式／可被探針比對「同一份試算表經 API 讀到的題數、作答格位置」與既有 xlsx 夾具解析結果是否相同證偽。
-3. **寫回：先複製一份試算表再寫入副本，原檔不動**：選了 Drive `files.copy` 複製整份檔案（候選 B 為 Sheets `create`＋`sheets.copyTo`，由探針二選一）／代價：老師雲端硬碟多一份檔案／可被探針證偽（副本的合併、框線與原檔相同；以 `RAW` 寫入的「=1+1」存成文字）。
+3. **寫回：先複製一份試算表再寫入副本，原檔不動**：選了 Drive `files.copy` 複製整份檔案（探針實測可行；候選 B Sheets `create`＋`sheets.copyTo` 會改分頁名，不採）／代價：老師雲端硬碟多一份檔案／可被探針證偽（副本的合併、框線與原檔相同；以 `RAW` 寫入的「=1+1」存成文字）。
 4. **保留 xlsx 上傳與 xlsx 下載當備援；移除「知道連結者可檢視」的公開連結下載**：代價：未登入時只能走上傳／下載 xlsx／屬取捨：公開連結下載正是課程補充說明點名的「下載成 xlsx 本機處理」。
 5. **題組子題的填空格改為「標籤格右側、仍在作答表頭欄寬內的空白格」**（PR #18 followup，負責人 2026-11-17 裁定併入本卡）：代價：改變現行匯出口徑（`group.xlsx` 答案從 G 欄移到 H 欄），xlsx 與 Sheets 兩條路徑同時改／可被三份夾具往返測試證偽。
 
@@ -46,7 +46,7 @@
 | 4 | `uv run --project server pytest -q server/tests/test_guided_notes_export.py` | `group.xlsx` 子題答案寫入 H 欄、G 欄標籤不變；single、variant 往返不變；passed |
 | 5 | `git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server` | 無輸出（仍無寫死座標） |
 | 6 | `git grep -n "export?format=xlsx" -- server web/src` | 無輸出（公開連結下載已移除） |
-| 7 | `uv run --project server python probes/google_sheets_probe.py` | 見 `probes/results/2026-11-xx-google-sheets.txt`：登入、讀取、副本、寫入四步皆 OK |
+| 7 | `uv run --project server python probes/google_sheets_probe.py <連結>` | 見 `probes/results/2026-11-17-google-sheets.txt`：登入、讀取、副本、寫入四步皆 OK（實作後真棧再跑一次） |
 | 8 | 人工驗證 | 見 tasks 3.x 與 `docs/manual-verification.md` 場次 A2、A5 |
 
 ## 實錄結果
