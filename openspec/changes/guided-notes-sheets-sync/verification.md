@@ -1,0 +1,71 @@
+# guided-notes-sheets-sync — verification
+
+知識時點：2026-11-17；本機 Windows 11、分支 `feat/guided-notes-sheets-sync`。
+
+## 門禁原樣輸出（`make gate`，摘錄計數行，退出碼 0）
+
+```
+All checks passed!
+All checks passed!
+261 passed, 1 warning in 49.68s
+48 passed in 6.63s
+ Test Files  8 passed (8)
+      Tests  38 passed (38)
+gate-zh-hant: 0 處簡體字
+gate-secrets: 0 findings
+Totals: 10 passed, 0 failed (10 items)
+gate-agents: 0 處漂移
+gate-parity: 0 處不一致
+```
+
+驗收 #5、#6：
+
+```
+$ git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server
+（無輸出）
+$ git grep -n "export?format=xlsx" -- server/quiz_server web/src
+（無輸出）
+```
+
+## 變異實錄（錯時會紅；每項改完即還原）
+
+```
+--- 變異：回呼不比對 cookie（初次：19 passed——缺「cookie 值不符」測試，已補 test_cookie_of_another_login_rejected）
+--- 變異：回呼不比對 cookie（補測試後）
+FAILED server\tests\test_api_google.py::test_cookie_of_another_login_rejected
+1 failed, 19 passed, 1 warning in 2.24s
+--- 變異：寫回改 USER_ENTERED
+FAILED server\tests\test_google_sheets.py::test_write_targets_only_the_copy_with_raw
+1 failed, 29 passed, 1 warning in 2.44s
+--- 變異：不讀 effectiveValue.numberValue
+FAILED server\tests\test_google_sheets.py::test_number_column_uses_effective_value
+1 failed, 10 passed in 0.82s
+--- 變異：停用 D5 子題填空格
+FAILED server\tests\test_guided_notes_parse.py::test_group_template - Asserti...
+FAILED server\tests\test_guided_notes_parse.py::test_d5_right_cell_with_content_is_not_blank
+FAILED server\tests\test_guided_notes_export.py::test_group_keeps_labels - As...
+3 failed, 20 passed in 1.41s
+--- 變異：import-url 不先擋階段
+FAILED server\tests\test_api_import.py::test_import_url_rejected_while_answering_sends_no_request
+1 failed, 19 passed, 1 warning in 1.34s
+--- 變異：授權網址拿掉 prompt=consent
+FAILED server\tests\test_api_google.py::test_login_url_and_cookie - KeyError:...
+1 failed, 18 passed, 1 warning in 2.01s
+--- 變異：回呼頁回顯 error 參數
+FAILED server\tests\test_api_google.py::test_callback_does_not_echo_params - ...
+1 failed, 18 passed, 1 warning in 2.06s
+--- 變異：gate_secrets 刪除 refresh token 形狀
+1 failed, 47 passed in 5.56s
+```
+
+## 真棧（design D1–D5）
+
+`probes/results/2026-11-17-sheets-sync-real-stack.txt`：`make dev`＋Chrome＋負責人 Google 帳號，登入 → 從 Google 試算表匯入（複製後讀副本，4 題、題組 2 子題）→ 兩組作答 → 結束 → 匯出到 Google 試算表；副本 H5／H6／H8／H9 為答案、G 欄標籤不變、「=1+1」存成文字、第 4 題空白；原試算表未被寫入。
+
+探針 `probes/google_sheets_probe.py` v1.2 新增的 `openid email`、換新、撤銷三步尚未重跑（tasks 0.7）；真棧已實證 `openid email`（老師頁顯示登入帳號）與 `prompt=consent` 授權網址。
+
+## 人工驗證（需求 P-05）
+
+狀態：**待執行**（交組員，照 `docs/manual-verification.md` 場次 A2 第 6 步、A5 第 16～18 步重驗；兩步已改寫為本卡流程）。
+
+結果：＿＿＿（執行人／日期／看到什麼）
