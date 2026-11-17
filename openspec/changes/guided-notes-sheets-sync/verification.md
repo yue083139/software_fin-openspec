@@ -7,8 +7,8 @@
 ```
 All checks passed!
 All checks passed!
-261 passed, 1 warning in 49.68s
-48 passed in 6.63s
+266 passed, 1 warning in 14.73s
+48 passed in 5.58s
  Test Files  8 passed (8)
       Tests  38 passed (38)
 gate-zh-hant: 0 處簡體字
@@ -58,11 +58,34 @@ FAILED server\tests\test_api_google.py::test_callback_does_not_echo_params - ...
 1 failed, 47 passed in 5.56s
 ```
 
+## 實作輪評審藥方的變異實錄
+
+```
+--- 變異：備援 xlsx 不淨化分頁名
+FAILED server\tests\test_api_google.py::test_sheet_names_invalid_in_xlsx_still_import[11/17 學習單]
+FAILED server\tests\test_api_google.py::test_sheet_names_invalid_in_xlsx_still_import[Q1:Q2]
+FAILED server\tests\test_api_google.py::test_sheet_names_invalid_in_xlsx_still_import[[備]]
+3 failed, 22 passed, 1 warning in 3.02s
+--- 變異：匯入失敗不刪副本
+FAILED server\tests\test_api_google.py::test_copy_deleted_when_not_adopted - ...
+1 failed, 24 passed, 1 warning in 3.30s
+```
+
+## 偏離（已回改 design v1.2 抬頭與 D1、D3、D4）
+
+| 決策 | 稿 | 實作 | 處置 |
+|---|---|---|---|
+| D1 換新失敗 | 過期後才 401 | 立即 401 並設未登入 | 回稿 |
+| D3 gid 檢查 | 讀副本時篩分頁 | 複製前即檢查，不建立副本 | 回稿 |
+| D3 副本未被採用 | 只有解析失敗刪副本 | 任何採用前失敗都刪副本 | 回稿（評審藥方） |
+| D4 備援 xlsx 分頁名 | 沿用 Google 名稱 | 淨化＋對照 | 回稿（評審藥方） |
+| D1 `.env` 編碼 | 未述 | utf-8-sig | 回稿（評審 followup 順手修） |
+
 ## 真棧（design D1–D5）
 
 `probes/results/2026-11-17-sheets-sync-real-stack.txt`：`make dev`＋Chrome＋負責人 Google 帳號，登入 → 從 Google 試算表匯入（複製後讀副本，4 題、題組 2 子題）→ 兩組作答 → 結束 → 匯出到 Google 試算表；副本 H5／H6／H8／H9 為答案、G 欄標籤不變、「=1+1」存成文字、第 4 題空白；原試算表未被寫入。
 
-探針 `probes/google_sheets_probe.py` v1.2 新增的 `openid email`、換新、撤銷三步尚未重跑（tasks 0.7）；真棧已實證 `openid email`（老師頁顯示登入帳號）與 `prompt=consent` 授權網址。
+探針 v1.2 六步皆 OK（`probes/results/2026-11-17-google-sheets-v1.2.txt`）：登入（含 email）、讀取（已含 D5 H 欄，與夾具相同）、複製、寫入、換新、撤銷（撤銷後再換新 400 invalid_grant）。
 
 ## 人工驗證（需求 P-05）
 

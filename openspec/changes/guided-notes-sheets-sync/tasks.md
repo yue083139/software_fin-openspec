@@ -7,7 +7,7 @@
 - [x] 0.4 `make probe-guided-notes` 確認 variant.xlsx 無「標籤格右側空白格」結構（D5 影響範圍）
 - [x] 0.5 `docs/parity.md` §4 登記本卡、§5 記變更；SpecKit 組同批起稿（`specs/010-guided-notes-sheets-sync/`）
 - [x] 0.6 提案輪評審（紅隊＋架構雙通道，1 輪，皆 CLEARED 0 阻斷）；藥方併入 v1.2；負責人 2026-11-17 裁定並批准 `contracts/api.md` 改動（D7）
-- [ ] 0.7 探針補 `openid email`、refresh 換新、撤銷（表單本體）三步；負責人重跑，原樣輸出存 `probes/results/`，回填 D1 證偽欄
+- [x] 0.7 探針補 `openid email`、refresh 換新、撤銷（表單本體）三步；負責人重跑，原樣輸出存 `probes/results/`，回填 D1 證偽欄
 
 ## 1. 驗收測試（先寫，先紅）
 - [x] 1.1 `server/tests/test_google_sheets.py`：四份夾具轉成 Sheets 格狀資料替身，解析結果與 xlsx 逐題相同；`effectiveValue` 題號負例；匯入請求序「標題 → copy → 讀副本」、解析失敗刪副本；寫回只打副本、只含作答格、`RAW`、分頁名 `'` 跳脫
