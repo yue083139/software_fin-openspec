@@ -32,6 +32,10 @@
 - **WHEN** 老師在 `answering` 階段要求匯出
 - **THEN** 伺服器 MUST 回 409
 
+#### Scenario: 上傳 xlsx 來源不能寫回 Google 試算表
+- **WHEN** 題目來自上傳 xlsx，老師在 `ended` 要求寫回 Google 試算表
+- **THEN** 伺服器 MUST 回 409「題目不是從 Google 試算表匯入，請改用下載 xlsx」，下載 xlsx MUST 仍可用
+
 #### Scenario: 未登入寫回 Google 試算表
 - **WHEN** 老師未登入 Google 就要求寫回 Google 試算表
 - **THEN** 伺服器 MUST 回 401，且 MUST NOT 呼叫任何 Google API

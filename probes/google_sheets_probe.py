@@ -1,4 +1,6 @@
-"""探針：驗證 guided-notes-sheets-sync 提案依賴的 Google OAuth／Sheets／Drive 行為（design D1–D3）。
+"""探針：驗證 guided-notes-sheets-sync 提案依賴的 Google OAuth／Sheets／Drive 行為。
+
+對應 OpenSpec design D1–D3＝SpecKit research R1–R3。
 
 用法（`make dev` 不可同時執行，本探針要佔用 127.0.0.1:8000 接 OAuth 回呼）：
     uv run --project server python probes/google_sheets_probe.py <Google 試算表連結>

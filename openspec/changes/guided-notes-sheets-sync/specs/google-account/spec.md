@@ -11,6 +11,10 @@
 - **WHEN** 老師按「以 Google 帳號登入」並在 Google 同意畫面同意
 - **THEN** 伺服器 MUST 以授權碼換得權杖，老師狀態 MUST 顯示已登入的帳號
 
+#### Scenario: 回呼不導回含老師金鑰的網址
+- **WHEN** Google 以有效 `state` 導回回呼
+- **THEN** 伺服器 MUST 回「登入完成，可關閉此分頁」頁面，MUST NOT 導向任何含老師金鑰的網址
+
 #### Scenario: 未設定 OAuth 用戶端
 - **WHEN** 伺服器啟動時未設定 `GOOGLE_CLIENT_ID` 或 `GOOGLE_CLIENT_SECRET`
 - **THEN** 老師頁 Google 區塊 MUST 停用並提示設定方式，上傳 xlsx 匯入 MUST 仍可用

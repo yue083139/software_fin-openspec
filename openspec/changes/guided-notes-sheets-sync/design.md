@@ -1,5 +1,7 @@
 # guided-notes-sheets-sync — design（v1.1 草稿）
 
+> 與 SpecKit 組 `specs/010-guided-notes-sheets-sync/research.md` R1–R7 一一對應、口徑相同（D_n＝R_n）。
+
 知識時點：2026-11-17。Google 端點、權限範圍與行為以探針 `probes/google_sheets_probe.py` 實測為準，原樣輸出 `probes/results/2026-11-17-google-sheets.txt`（2026-11-17 負責人帳號執行，四步皆 OK）。
 
 ## 背景
@@ -16,9 +18,9 @@
 ### D1 認證：OAuth 2.0 授權碼流程＋PKCE，網頁應用程式用戶端
 
 - 用戶端類型「網頁應用程式」，已授權重新導向 URI 固定 `http://127.0.0.1:8000/api/google/callback`（`make dev` 的固定埠）。`GOOGLE_CLIENT_ID`、`GOOGLE_CLIENT_SECRET` 只經環境變數（`.env`，已在 `.gitignore`）；未設定時 Google 功能整區停用並提示，xlsx 備援照常。
-- 流程：老師頁按「以 Google 帳號登入」→ `POST /api/teacher/google/login`（需老師金鑰）回傳授權網址；伺服器產生一次性 `state`（`secrets.token_urlsafe(32)`）與 PKCE `code_verifier`，有效 10 分鐘 → 瀏覽器到 Google 同意 → Google 導回 `GET /api/google/callback?code&state`（瀏覽器導回無法帶老師金鑰，故以 `state` 綁定該次老師請求；不符、過期或重放 ⇒ 400）→ 伺服器以 code＋verifier 換權杖 → 導回老師頁。
+- 流程：老師頁按「以 Google 帳號登入」→ `POST /api/teacher/google/login`（需老師金鑰）回傳授權網址；伺服器產生一次性 `state`（`secrets.token_urlsafe(32)`）與 PKCE `code_verifier`，有效 10 分鐘 → 瀏覽器到 Google 同意 → Google 導回 `GET /api/google/callback?code&state`（瀏覽器導回無法帶老師金鑰，故以 `state` 綁定該次老師請求；不符、過期或重放 ⇒ 400）→ 伺服器以 code＋verifier 換權杖 → 回 HTML「登入完成，可關閉此分頁」（不導回含老師金鑰的網址，避免金鑰出現在導向紀錄）；web 以新分頁開授權網址，原老師頁輪詢 `GET /api/teacher/google`。
 - 權杖（access token、refresh token）只存 `Activity` 外的單例 `GoogleSession`（伺服器記憶體），不落地、不入日誌、不出現在任何 API 回應或 WebSocket 訊息；伺服器重啟即須重新登入。`access_type=offline` 取 refresh token，access token 過期前 60 秒自動換新。登出 ⇒ 呼叫撤銷端點並清空。
-- 權限範圍：`https://www.googleapis.com/auth/spreadsheets`＋（D3 選 A 時）`https://www.googleapis.com/auth/drive`。同意畫面維持「測試中」，負責人與組員帳號登記為測試使用者。
+- 權限範圍：`https://www.googleapis.com/auth/spreadsheets`、`https://www.googleapis.com/auth/drive`（D3 採 A）、`openid email`（顯示登入帳號，取自權杖回應的 `id_token` 酬載）。同意畫面維持「測試中」，負責人與組員帳號登記為測試使用者。
 - 證偽欄｜可證偽：`probes/results/2026-11-17-google-sheets.txt` 步驟 1「回呼 state 相符：True」「換權杖 HTTP 200；有 refresh_token：True；scope：https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets；expires_in：3599」——網頁應用程式用戶端接受 `127.0.0.1:8000` 重新導向，PKCE＋client secret 換得 refresh token。另實測：帳號不在測試使用者名單時 Google 顯示「已封鎖存取權：未完成 Google 驗證程序」且**不導回**回呼，故伺服器的 `state` 須有過期（10 分鐘），不能等回呼清除。屬取捨部分：不用服務帳號（負責人裁定）；不用 `google-auth-oauthlib`，改以既有依賴 httpx 手寫三支 REST 呼叫，理由＝沿用 `sources.py` 的 `MockTransport` 替身測法、不新增依賴、兩組程式逐字相同較易維持。
 
 ### D2 讀取：Sheets API 格狀資料 → 工作表抽象 → 既有解析
@@ -41,7 +43,7 @@
 
 - 匯入：①「從 Google 試算表匯入」（需登入，走 D2）；②上傳 xlsx（不需登入，現行路徑不變）。**移除**未登入的公開連結下載（`download_sheet`、`export_url` 刪除），理由：正是課程補充說明點名的做法。
 - 匯出：來源為 Google 試算表 ⇒ 主按鈕「匯出到 Google 試算表」（D3），另保留「下載 xlsx」；來源為上傳 xlsx ⇒ 只有「下載 xlsx」（無雲端原檔可複製）。
-- 以 Google 試算表匯入時不保留原檔位元組；「下載 xlsx」由格狀資料轉成的工作簿產生（只含值與合併，不含格式），按鈕文案註明「備援，不含格式」。
+- `Activity` 增 `source_sheet_id`（Google 來源的試算表 id；上傳為 `None`）。以 Google 試算表匯入時 `source_bytes` 為格狀資料轉成的工作簿（只含值與合併，不含格式），供「下載 xlsx（備援，不含格式）」。題目來自上傳 xlsx 時寫回 Google 試算表 ⇒ 409「題目不是從 Google 試算表匯入，請改用下載 xlsx」。
 - 證偽欄｜屬取捨：理由＝xlsx 只當網路或授權失敗時的備援；完整格式由 D3 副本保留。
 
 ### D5 題組子題填空格（PR #18 followup，負責人裁定併入本卡）
@@ -53,14 +55,14 @@
 
 ### D6 作答隔離與憑證
 
-- 學生端 view 不含任何 Google 欄位；老師端狀態只多 `google: {configured, signed_in, email?}`（不含權杖）。
-- 日誌不記 code、權杖、client secret；HTTP 錯誤訊息只轉 Google 錯誤的 `status` 字串，不回顯請求網址的查詢參數。
+- 學生 view、老師 view 都不增 Google 欄位；登入狀態只經 `GET /api/teacher/google`（需老師金鑰，`{configured, signed_in, email}`，不含權杖）。
+- 日誌不記 code、權杖、client secret；Google API 錯誤 ⇒ 502，訊息只轉 Google 錯誤的 `status` 字串，不回顯請求網址。access token 換新失敗 ⇒ 401 並設為未登入。
 - `ops/gate_secrets.py` 加形狀：`GOCSPX-` 開頭的用戶端密鑰、`ya29.` 開頭的 access token、`1//` 開頭的 refresh token；夾具用「前綴＋0×n」放行。
 - 證偽欄｜可證偽：`test_isolation.py` 新增「以假權杖登入後，學生 WebSocket／REST 完整 payload 與 caplog 不含權杖字串」；gate-secrets 變異實錄（植入真形狀字串 ⇒ 紅）。
 
 ### D7 契約
 
-`contracts/api.md` 改動（**須負責人批准**）：新增 `GET /api/teacher/google`（狀態）、`POST /api/teacher/google/login`、`GET /api/google/callback`、`POST /api/teacher/google/logout`、`POST /api/teacher/export-sheet`；`POST /api/teacher/import-url` 語意改為「需已登入、以 Sheets API 讀取」，未登入 401；`GET /api/teacher/export` 不變（xlsx 備援）。老師狀態加 `google` 欄。
+`contracts/api.md` 改動（**須負責人批准**）：新增 `GET /api/teacher/google`（`{configured, signed_in, email}`）、`POST /api/teacher/google/login`（`{url}`；400 未設定用戶端）、`GET /api/google/callback`（HTML；400 state 不符或 Google 回 error）、`POST /api/teacher/google/logout`（`{signed_in: false}`）、`POST /api/teacher/export-sheet`（`{url}`；401 未登入；409 非 ended、尚未匯入或題目不是從 Google 試算表匯入；502 Google 錯誤）；`POST /api/teacher/import-url` 語意改為「需已登入、以 Sheets API 讀取」（401 未登入、400 連結不符不發請求、409 非 preparing 不發請求、502 Google 錯誤）；`GET /api/teacher/export` 不變（xlsx 備援；Google 來源時只含值與合併）。老師與學生 view 不增欄位。
 
 - 證偽欄｜屬取捨：理由＝匯入網址端點沿用舊名，web 改動最小。
 

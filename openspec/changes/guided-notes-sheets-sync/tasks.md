@@ -21,7 +21,7 @@
 - [ ] 2.2 `google_auth.py`：授權網址、PKCE、`state` 一次性 10 分鐘、換權杖、自動換新、撤銷
 - [ ] 2.3 `google_sheets.py`：讀格狀資料 → `Grid`；複製（D3 定案者）；`values:batchUpdate`
 - [ ] 2.4 `sources.py`：刪 `export_url`、`download_sheet`，保留上傳檢查與試算表 id 解析
-- [ ] 2.5 `app.py`、`views.py`：D7 端點；老師狀態 `google` 欄；學生 view 不動
+- [ ] 2.5 `app.py`：D7 端點；`activity.py` `source_sheet_id`；`__main__.py` 讀 `.env`；老師與學生 view 不增欄位
 - [ ] 2.6 `contracts/api.md`（負責人批准後）
 - [ ] 2.7 web：Google 登入區、從試算表匯入、匯出到 Google 試算表（顯示副本連結）、xlsx 備援區；`types.ts`、`api.ts` 與元件測試
 - [ ] 2.8 `ops/gate_secrets.py` 加 `GOCSPX-`、`ya29.`、`1//` 形狀＋變異實錄
