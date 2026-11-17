@@ -43,7 +43,7 @@ FAILED server\tests\test_submit.py::test_concurrent_same_team_same_question
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。步驟：
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 A3）。步驟：
 
 1. `make dev`；老師頁匯入 `group.xlsx`；兩個分頁分別加入第1組、第2組。
 2. 老師按開始。第1組對第 3 題送出「甲」，第2組對第 3 題送出「乙」；第1組對第 1 題只填一個子題，按鈕應無法按。
@@ -51,4 +51,4 @@ FAILED server\tests\test_submit.py::test_concurrent_same_team_same_question
 4. 第1組再對第 3 題送出應失敗（畫面已鎖定）。
 5. 老師按結束後，第2組畫面出現第 3 題得主第1組（結果畫面在 `results-view` 卡完成）。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 A3）。

@@ -60,6 +60,6 @@ FAILED tests/test_team_mode.py::test_device_limit - AssertionError: assert 40...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 場次 E 執行，結果回填本段）。
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 E）。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 E）。

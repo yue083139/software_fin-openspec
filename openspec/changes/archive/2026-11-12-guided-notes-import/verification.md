@@ -43,11 +43,11 @@ $ git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。步驟：
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 A2）。步驟：
 
 1. `make dev`，開老師頁。
 2. 依序上傳 `tests/fixtures/guided-notes/single.xlsx`、`group.xlsx`、`variant.xlsx`，確認題目清單分別為 6 題、4 題（第 1、2 題為 2 子題題組）、5 題（第 2 題 3 子題、第 4 題 2 子題）。
 3. 把課程「題組＋單題範本」的 Google 試算表連結貼到「從連結匯入」，結果應與上傳 group.xlsx 相同。
 4. 學生分頁在準備中看到題號清單，但看不到題目敘述。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 A2）。

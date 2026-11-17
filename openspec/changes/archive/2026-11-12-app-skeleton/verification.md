@@ -45,7 +45,7 @@ FAILED server\tests\test_phases.py::test_concurrent_join_same_team_once - ass...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）（AI 不能代替人工驗證）。步驟：
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 A1）（AI 不能代替人工驗證）。步驟：
 
 1. `make web-install` 後 `make dev`，記下終端機印出的老師頁網址。
 2. 瀏覽器開三個分頁：老師頁網址、首頁選「第1組」、首頁選「第2組」。
@@ -53,4 +53,4 @@ FAILED server\tests\test_phases.py::test_concurrent_join_same_team_once - ass...
 4. 老師頁看到第1組、第2組「已加入」；按「釋放」第2組 ⇒ 第2組分頁顯示「尚未加入組別或組別已被老師釋放」。
 5. （第一張卡尚無題目時「開始搶答」可直接按）老師按開始／結束 ⇒ 學生分頁階段同步變為「搶答中」「已結束」。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 A1）。
