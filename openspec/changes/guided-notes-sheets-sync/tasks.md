@@ -31,5 +31,5 @@
 ## 3. 驗證
 - [x] 3.1 `make gate` 原樣輸出、變異實錄寫入 `verification.md`
 - [x] 3.2 真棧探針：`make dev` 實際登入、匯入、寫回一次，輸出存 `probes/results/`
-- [ ] 3.3 人工驗證：改寫 `docs/manual-verification.md` 場次 A2 第 6 步、A5 第 16～18 步，交組員重驗並回填
+- [x] 3.3 人工驗證：改寫 `docs/manual-verification.md` 場次 A2 第 6 步、A5 第 16～18 步，交組員重驗並回填（2026-11-19 jinny 重驗，全部符合）
 - [x] 3.4 `docs/parity.md` 狀態更新、`make gate-parity SIBLING=../software_fin-speckit` 綠

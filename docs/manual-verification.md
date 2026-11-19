@@ -118,13 +118,15 @@
 
 執行人：jinny　日期：2026-11-17　repo／commit：`software_fin-openspec` `1339d44`（`dev`）　作業系統／瀏覽器：Windows 11／Chrome（含無痕）、Edge
 
+重驗（`guided-notes-sheets-sync`，A2 第 6 步、A5 第 16～18 步）：執行人 jinny　日期：2026-11-19　commit：`9e3b39a`（`feat/guided-notes-sheets-sync`）
+
 | 場次 | 對應卡 | 結果（✅／❌） | 不符之處（步驟號＋實際看到什麼） |
 |---|---|---|---|
 | A1 | `app-skeleton` | ✅ | |
-| A2 | `guided-notes-import` | ✅ | 依 2026-11-17 課程補充說明，Guided Notes 須直接串接雲端 Google Sheets 讀寫；本列驗的是現行「連結下載 xlsx 後本機解析」流程，Google Sheets 直連改版合入後第 6 步須重驗 |
+| A2 | `guided-notes-import` | ✅ | 2026-11-19 以 `guided-notes-sheets-sync` 重驗第 6 步（Google 登入→從試算表匯入→建立副本）✅。 |
 | A3 | `buzz-answering` | ✅ | |
 | A4 | `results-view` | ✅ | |
-| A5 | `guided-notes-export` | ✅ | 觀察（非不符）：`group.xlsx` 題組子題的 G、H 欄未合併，G 欄預填「（1）」、H 欄空白；現行匯出把答案接在 G 欄標籤後（「（1）答案」），H 欄維持空白。依範本版面 H 欄較像填空格，負責人 2026-11-17 裁：併入 Google Sheets 直連改版卡一起定。依 2026-11-17 課程補充說明，本列驗的是現行「匯出 xlsx、手動取代試算表」流程，Google Sheets 直連改版合入後第 16～18 步須重驗 |
+| A5 | `guided-notes-export` | ✅ | 2026-11-19 以 `guided-notes-sheets-sync` 重驗第 16～18 步 ✅：匯出到 Google 試算表副本，題組答案在標籤右邊（H 欄）、G 欄標籤不變、沒人搶的題空白、原試算表未變；下載 xlsx 備援答案位置相同；上傳 xlsx 來源時提示「題目不是從 Google 試算表匯入，請改用下載 xlsx」，備援檔題組答案在 H 欄。原 G／H 欄觀察已由本卡解決。 |
 | B | `game-mode-framework` | ✅ | |
 | C | `question-settings` | ✅ | |
 | D | `mode-timed-scoring` | ✅ | |

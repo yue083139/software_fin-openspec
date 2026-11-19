@@ -89,6 +89,6 @@ FAILED server\tests\test_api_google.py::test_copy_deleted_when_not_adopted - ...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 場次 A2 第 6 步、A5 第 16～18 步重驗；兩步已改寫為本卡流程）。
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 A2 第 6 步、A5 第 16～18 步重驗）。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（jinny／2026-11-19／`feat/guided-notes-sheets-sync` `9e3b39a`，Windows 11＋Chrome（含無痕）、Edge，負責人 OAuth 用戶端＋jinny 的 Google 帳號（測試使用者）；明細見 `docs/manual-verification.md` §5 A2、A5）。A2 第 6 步：登入完成、老師頁顯示已登入，從試算表匯入得 4 題（第 1、2 題各 2 子題）並出現副本連結，雲端硬碟多一份「-搶答結果」，學生只見題號。A5 第 16 步：匯出後副本題組答案在標籤右邊、G 欄標籤不變、第 3 題為得主答案、第 2、4 題空白、格式框線不變，原試算表未變；第 17 步：下載 xlsx 答案位置相同；第 18 步：上傳來源匯出顯示 409 提示，備援檔題組答案在 H 欄。
