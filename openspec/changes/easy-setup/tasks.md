@@ -22,7 +22,7 @@
 - [x] 2.6 `contracts/api.md`、README、`.env.example`、`docs/manual-verification.md`
 
 ## 3. 驗證
-- [ ] 3.1 `make gate` 原樣輸出與變異實錄寫入 `verification.md`
+- [x] 3.1 `make gate` 原樣輸出與變異實錄寫入 `verification.md`
 - [ ] 3.2 實作輪評審（雙通道 1 輪）
 - [ ] 3.3 人工驗證（負責人：雙擊 `start.cmd` 全程不看終端機完成設定；清除設定後精靈重設不重啟即可登入）
 - [ ] 3.4 `docs/parity.md` 狀態、`make gate-parity SIBLING=../software_fin-speckit` 綠
