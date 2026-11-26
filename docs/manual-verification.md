@@ -161,15 +161,15 @@
 |---|---|---|---|
 | A1 | `app-skeleton` | ✅ | |
 | A2 | `guided-notes-import` | ✅ | 2026-11-19 以 `guided-notes-sheets-sync` 重驗第 6 步（Google 登入→從試算表匯入→建立副本）✅。 |
-| A3 | `buzz-answering` | ✅ | |
-| A4 | `results-view` | ✅ | |
-| A5 | `guided-notes-export` | ✅ | 2026-11-19 以 `guided-notes-sheets-sync` 重驗第 16～18 步 ✅：匯出到 Google 試算表副本，題組答案在標籤右邊（H 欄）、G 欄標籤不變、沒人搶的題空白、原試算表未變；下載 xlsx 備援答案位置相同；上傳 xlsx 來源時提示「題目不是從 Google 試算表匯入，請改用下載 xlsx」，備援檔題組答案在 H 欄。原 G／H 欄觀察已由本卡解決。2026-11-23 依修正後 A3 重跑第 16 步 ✅：副本第 1 題空白、第 2 題第2組（題組答案在 H 欄）、第 3 題「甲」、第 4 題第3組，原試算表未變。 |
+| A3 | `buzz-answering` | ✅ | 2026-11-26 以 `question-text` 重驗第 7 步（A2）、第 8 步 ✅：學生準備中只見題號；搶答中每題（含題組子題）出現題目敘述。 |
+| A4 | `results-view` | ✅ | 2026-11-26 以 `answer-review` 驗第 15a～15c 步 ✅（判錯遞補、判對鎖定、連點不跳組、重設本題）。 |
+| A5 | `guided-notes-export` | ✅ | 2026-11-19 以 `guided-notes-sheets-sync` 重驗第 16～18 步 ✅：匯出到 Google 試算表副本，題組答案在標籤右邊（H 欄）、G 欄標籤不變、沒人搶的題空白、原試算表未變；下載 xlsx 備援答案位置相同；上傳 xlsx 來源時提示「題目不是從 Google 試算表匯入，請改用下載 xlsx」，備援檔題組答案在 H 欄。原 G／H 欄觀察已由本卡解決。2026-11-23 依修正後 A3 重跑第 16 步 ✅：副本第 1 題空白、第 2 題第2組（題組答案在 H 欄）、第 3 題「甲」、第 4 題第3組，原試算表未變。2026-11-26 依 `answer-review` 新版重驗第 16～18 步 ✅：副本名稱「_作答情況」、第 3 題「乙」，其餘同上。 |
 | B | `game-mode-framework` | ✅ | |
 | C | `question-settings` | ✅ | |
 | D | `mode-timed-scoring` | ✅ | |
 | E | `team-mode` | ✅ | |
-| F | `student-qr` | 待執行 | |
-| G | `teacher-key-hidden` | 待執行 | |
+| F | `student-qr` | ✅ | 2026-11-26 jinny（Chrome＋手機）依 `1639b7a` 版場次 F（`start-tunnel.cmd` 啟動）第 1～5 步全部符合。`easy-setup` 改版後的第 1、2、5、6 步（老師頁「開啟／關閉手機連線」）待重驗。 |
+| G | `teacher-key-hidden` | ✅ | 2026-11-26 jinny（Chrome）第 1～6 步全部符合（第 4、5 步同時涵蓋 `teacher-key-error`）。 |
 | H | `easy-setup` | 待執行 | |
 
 各卡原始步驟：OpenSpec 組 `openspec/changes/archive/<日期>-<卡名>/verification.md`；SpecKit 組 `specs/<NNN>-<卡名>/verification.md`。

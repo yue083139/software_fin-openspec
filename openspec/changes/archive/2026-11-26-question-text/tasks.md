@@ -22,5 +22,5 @@
 ## 3. 驗證
 - [x] 3.1 `make gate` 原樣輸出寫入 `verification.md`
 - [x] 3.2 實作輪評審（雙通道 1 輪）
-- [ ] 3.3 人工驗證（負責人，`docs/manual-verification.md` 場次 A）
+- [x] 3.3 人工驗證（`docs/manual-verification.md` 場次 A；2026-11-26 jinny 執行，全部符合）
 - [ ] 3.4 `docs/parity.md` 狀態更新、`make gate-parity SIBLING=../software_fin-speckit` 綠
