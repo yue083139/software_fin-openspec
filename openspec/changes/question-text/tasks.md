@@ -20,7 +20,7 @@
 - [x] 2.5 文件：`docs/manual-verification.md` 場次 A 加「準備階段只見題號、開始後見敘述」
 
 ## 3. 驗證
-- [ ] 3.1 `make gate` 原樣輸出寫入 `verification.md`
-- [ ] 3.2 實作輪評審（雙通道 1 輪）
+- [x] 3.1 `make gate` 原樣輸出寫入 `verification.md`
+- [x] 3.2 實作輪評審（雙通道 1 輪）
 - [ ] 3.3 人工驗證（負責人，`docs/manual-verification.md` 場次 A）
 - [ ] 3.4 `docs/parity.md` 狀態更新、`make gate-parity SIBLING=../software_fin-speckit` 綠
