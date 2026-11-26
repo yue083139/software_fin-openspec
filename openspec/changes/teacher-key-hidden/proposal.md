@@ -4,7 +4,7 @@
 
 ## 首屏決策摘要
 
-1. **金鑰只經網址帶入一次，載入後以 `history.replaceState` 自網址移除**：網址列、瀏覽紀錄、螢幕分享與錄影不再露出金鑰／可被 `web/src/route.test.ts` 證偽（載入後 `location.href` 不含金鑰）。
+1. **金鑰只經網址帶入一次，載入後以 `history.replaceState` 自網址移除**：網址列、上一頁／下一頁紀錄項、螢幕分享與錄影不再露出金鑰（瀏覽器「記錄」頁與網址列自動完成仍可能保留最初貼上的完整網址，屬瀏覽器行為，手冊場次 G 註明）／可被 `web/src/route.test.ts` 證偽（載入後 `location.href` 不含金鑰）。
 2. **金鑰存本分頁 `sessionStorage`（`qz_teacher_key`）**：重新整理仍可用、關分頁即失效；不寫 localStorage 或 cookie／屬取捨：同分頁腳本可讀 sessionStorage，但本專案前端無 `dangerouslySetInnerHTML`、學生頁不讀此鍵；原本金鑰已在網址（同樣可被同頁腳本讀），風險不增。
 3. **網址帶新 key 時以網址為準並覆寫；REST 401 或 WebSocket 4401 ⇒ 清除並顯示既有「老師金鑰錯誤，請回首頁重新輸入。」**／可被 `web/src/pages/teacherkey.test.tsx` 證偽。
 4. **伺服器、契約、終端機輸出不變**：終端機仍印完整老師頁網址（含金鑰），老師複製貼上即可。

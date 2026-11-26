@@ -6,7 +6,7 @@
 
 - 老師頁路由為 hash（`#/teacher?key=…`）。`takeTeacherKey()` 解析 hash，有 `key` ⇒ 存 sessionStorage、刪 `key` 後以 `history.replaceState(history.state, "", pathname+search+"#/teacher"+其餘參數)` 改寫網址並回傳金鑰；無 `key` ⇒ 回傳 sessionStorage 值或 `""`。
 - `replaceState` 取代目前紀錄項，不新增紀錄，也不觸發 `hashchange`（不會重複執行）；`App` 以 `useMemo(..., [hash])` 在 hash 改變時重算，首頁「進入老師頁」連結（`#/teacher?key=…`）照舊。
-- 外送面：hash 本來就不隨 HTTP 請求送出（不在 Referer、不在伺服器日誌）；本卡再去掉網址列與瀏覽紀錄這兩處。
+- 外送面：hash 本來就不隨 HTTP 請求送出（不在 Referer、不在伺服器日誌）；本卡再去掉網址列與上一頁／下一頁紀錄項。**不保證**：瀏覽器「記錄」頁與網址列自動完成可能保留最初貼上的完整網址（瀏覽器在導覽時即記錄造訪），本卡不處理，手冊註明錄影前的做法。
 - 證偽欄｜可證偽：`route.test.ts`「網址帶 key」例斷言 `location.hash === "#/teacher"` 且 `location.href` 不含金鑰。
 
 ## D2 存放：本分頁 sessionStorage
