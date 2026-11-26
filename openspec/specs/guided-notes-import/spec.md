@@ -5,30 +5,6 @@
 
 ## Requirements
 
-### Requirement: 老師可從 xlsx 檔或 Google Sheets 連結匯入 Guided Notes
-
-系統 MUST 接受老師上傳的 xlsx 檔或「知道連結者可檢視」的 Google Sheets 連結作為題目來源；匯入 MUST 只在 `preparing` 階段允許，成功後 MUST 取代既有題目並推送給所有使用者。
-
-#### Scenario: 上傳官方題組範本
-- **WHEN** 老師上傳官方「題組＋單題」範本
-- **THEN** 題目清單 MUST 為 4 題，第 1、2 題各含 2 個子題，第 3、4 題各含 1 個子題
-
-#### Scenario: 貼上 Google Sheets 連結
-- **WHEN** 老師貼上 `https://docs.google.com/spreadsheets/d/<id>/edit#gid=0`
-- **THEN** 伺服器 MUST 由 `https://docs.google.com/spreadsheets/d/<id>/export?format=xlsx&gid=0` 下載並以同一規則解析
-
-#### Scenario: 非 Google 主機的連結被拒
-- **WHEN** 老師貼上非 `docs.google.com` 或非 https 的連結
-- **THEN** 伺服器 MUST 回 400 且 MUST NOT 對該主機發出請求
-
-#### Scenario: 轉址到非 Google 主機被拒
-- **WHEN** 下載過程中被轉址到非 Google 網域的主機
-- **THEN** 伺服器 MUST 中止下載、MUST NOT 對該主機發出請求並回 400
-
-#### Scenario: 搶答中不得匯入
-- **WHEN** 老師在 `answering` 階段匯入
-- **THEN** 伺服器 MUST 回 409，題目 MUST NOT 改變
-
 ### Requirement: 解析必須以表頭與合併範圍動態定位，不得依賴固定座標
 
 系統 MUST 以表頭文字找出題號欄與作答欄，以題號儲存格的合併範圍判定每題涵蓋的列，並以每列作答欄的儲存格作為作答格；題數 MUST 與原檔一致。
@@ -64,3 +40,40 @@
 #### Scenario: 沒有參考答案欄
 - **WHEN** 匯入課程提供的單題範本
 - **THEN** 匯入 MUST 成功，所有子題 MUST 沒有參考答案
+
+### Requirement: 老師可上傳 xlsx 或以 Google 帳號直接讀取 Google 試算表匯入 Guided Notes
+
+系統 MUST 接受老師上傳的 xlsx 檔，或在老師已以 Google 帳號登入時接受 Google Sheets 連結作為題目來源；以連結匯入時 MUST 以 Google Sheets API 直接讀取雲端試算表的儲存格值與合併範圍，MUST NOT 下載成 xlsx 檔再解析。匯入 MUST 只在 `preparing` 階段允許，成功後 MUST 取代既有題目並推送給所有使用者。
+
+#### Scenario: 上傳官方題組範本
+- **WHEN** 老師上傳官方「題組＋單題」範本
+- **THEN** 題目清單 MUST 為 4 題，第 1、2 題各含 2 個子題，第 3、4 題各含 1 個子題
+
+#### Scenario: 以 Google 試算表連結匯入
+- **WHEN** 已登入的老師貼上「題組＋單題」範本的 `https://docs.google.com/spreadsheets/d/<id>/edit#gid=0`
+- **THEN** 伺服器 MUST 先以 Drive 複製一份「<原標題>-搶答結果」副本，再以 Sheets API 讀取副本該分頁的值與合併範圍，題目清單與作答格位置 MUST 與上傳同一範本的 xlsx 相同，回應 MUST 含副本連結
+- **AND** 伺服器 MUST NOT 對 `/export?format=xlsx` 發出請求
+
+#### Scenario: 未登入不得以連結匯入
+- **WHEN** 老師未以 Google 帳號登入就以連結匯入
+- **THEN** 伺服器 MUST 回 401「請先以 Google 帳號登入」，題目 MUST NOT 改變
+
+#### Scenario: 非 Google 試算表的連結被拒
+- **WHEN** 老師貼上非 `https://docs.google.com/spreadsheets/d/<id>` 形式的連結
+- **THEN** 伺服器 MUST 回 400 且 MUST NOT 對任何主機發出請求
+
+#### Scenario: 搶答中不得匯入
+- **WHEN** 老師在 `answering` 階段匯入
+- **THEN** 伺服器 MUST 回 409，題目 MUST NOT 改變
+
+### Requirement: 題組子題標籤格右側的空白格為填空格
+
+作答格含非佔位符標籤、本身不屬合併範圍，且同列右側相鄰格落在作答表頭合併範圍的欄寬內、空白且不屬合併範圍時，系統 MUST 以該右側格為填空格，並以標籤格文字作為子題標籤。判斷 MUST 只依表頭合併範圍與儲存格內容，MUST NOT 寫死欄位。
+
+#### Scenario: 官方題組範本的子題填空格
+- **WHEN** 匯入官方「題組＋單題」範本（作答表頭橫跨兩欄、子題列左格為「（1）」右格空白）
+- **THEN** 第 1 題兩個子題的填空格 MUST 為標籤右側的空白格，子題標籤 MUST 為「（1）」「（2）」
+
+#### Scenario: 單題作答格不受影響
+- **WHEN** 匯入官方「單題」範本（作答格本身為橫向合併範圍）
+- **THEN** 每題填空格 MUST 為該合併範圍左上角，與本規則實施前相同
