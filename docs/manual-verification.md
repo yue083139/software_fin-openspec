@@ -154,6 +154,6 @@
 | D | `mode-timed-scoring` | ✅ | |
 | E | `team-mode` | ✅ | |
 | F | `student-qr` | ✅ | 2026-11-26 jinny（Chrome＋手機）第 1～5 步全部符合。 |
-| G | `teacher-key-hidden` | 待執行 | |
+| G | `teacher-key-hidden` | ✅ | 2026-11-26 jinny（Chrome）第 1～6 步全部符合（第 4～6 步同時涵蓋 `teacher-key-error`）。 |
 
 各卡原始步驟：OpenSpec 組 `openspec/changes/archive/<日期>-<卡名>/verification.md`；SpecKit 組 `specs/<NNN>-<卡名>/verification.md`。
