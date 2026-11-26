@@ -1,4 +1,4 @@
-# question-text — 匯入題目敘述，開放作答後顯示給學生（v1.0，提案輪評審前草稿）
+# question-text — 匯入題目敘述，開放作答後顯示給學生（v1.1，提案輪評審後定稿；負責人 2026-11-26 指示全部做完再測，契約改動照傾向批准）
 
 檔位：**S**（Guided Notes 解析口徑、`contracts/`、新增送往學生端的欄位）｜主人：@yue083139｜parity：`docs/parity.md` §4 `question-text`（本卡開卡登記）｜需求：X-04｜依賴：`guided-notes-import`、`mode-timed-scoring`
 流程：負責人 2026-11-26 裁「S 檔壓縮版」——提案輪、實作輪各一次雙通道評審，同一會話連續跑，負責人在對話裡裁。
@@ -10,13 +10,13 @@
 3. **契約只增欄位**：`questions[].prompts`（長度＝子題數，與 `labels` 對齊）；學生看不到的題**不帶此鍵**（fail-closed）／可被 `test_isolation.py` 新增負例證偽。
 4. **寫回與匯出不變**：敘述只讀不寫，`write_answers` 與 Google 寫回不碰題目欄／可被既有匯出往返測試證偽。
 
-**矩陣落點**：M-003（R-02）聲明不變，守門加 `test_guided_notes_parse.py::test_prompts_*`；新增 M-021（X-04）「題目敘述只在開放作答後送給學生」，守門 `server/tests/test_isolation.py::test_prompts_hidden_until_open`、`test_prompts_sequential_only_opened`。
+**矩陣落點**：M-003（R-02）聲明不變，守門加 `test_guided_notes_parse.py::test_prompts_*`；新增 M-021（X-04）「題目敘述只在開放作答後送給學生」，守門 `server/tests/test_isolation.py::test_prompts_hidden_until_open`（含老師準備階段即有）、`test_prompts_sequential_only_opened`、`test_prompts_all_after_timed_end`（時間計分只開過第 1 題就結束，結果頁每題都帶）。
 
 **merge 三問第三問**：需求 R-02 寫「不要求匯入題目敘述」，所以本卡屬 X-04（增進活動品質）。負責人 2026-11-26 人工驗證全流程時指出「學生頁只有答題欄」：原情境是老師收回講義後才搶答，學生手上沒有題目，只見題號無從作答。期限 2026-11-30，影片須與程式一致，故在錄影前做。
 
 ## 為什麼
 
-現行解析只讀題號欄與作答欄（`server/quiz_server/guided_notes.py:105`「`if number_col is None and text in NUMBER_ALIASES:`」），題目欄整欄略過；學生 view 只有 `{number, labels, multiplier, time_limit}`（`server/quiz_server/views.py:17`）。
+現行解析只讀題號欄與作答欄（`server/quiz_server/guided_notes.py:110`「`if number_col is None and text in NUMBER_ALIASES:`」），題目欄整欄略過；學生 view 只有 `{number, labels, multiplier, time_limit}`（`server/quiz_server/views.py:17`）。
 
 ## 目標
 
@@ -41,7 +41,7 @@
 | 2 | `uv run --project server pytest -q server/tests/test_isolation.py` | 準備階段學生 view 無 `prompts`；逐題模式只帶已開放題；搶答中帶 `prompts` 的 payload 仍不含他組答案；無效憑證只回最少資訊；passed |
 | 3 | `uv run --project server pytest -q server/tests/test_guided_notes_export.py server/tests/test_google_sheets.py` | 匯出與 Google 寫回結果不變；passed |
 | 4 | `npm --prefix web test` | 學生作答卡顯示敘述、無敘述時不顯示空白段；passed |
-| 5 | `git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server` | 無輸出（仍無寫死座標） |
+| 5 | `git grep -nE '"[A-Z]{1,2}[0-9]+"' -- server/quiz_server/guided_notes.py server/quiz_server/views.py` | 無輸出（定位與裁切程式仍無寫死座標；只掃這兩檔，因 `google_auth.py` 的 OAuth 參數值 `"S256"` 會誤中）；負例：暫存副本插入 `"G5"` 後同指令有輸出 |
 | 6 | 人工驗證 | `docs/manual-verification.md` 場次 A：學生準備階段只見題號，開始搶答後看到每題（含題組子題）敘述 |
 
 ## 實錄結果

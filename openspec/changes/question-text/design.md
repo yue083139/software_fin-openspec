@@ -1,6 +1,8 @@
-# question-text — design（v1.0）
+# question-text — design（v1.1）
 
-> 與 SpecKit 組 `specs/011-question-text/research.md` R1–R4 一一對應、口徑相同（D_n＝R_n）。
+> **v1.1（提案輪評審，紅隊 0B/2M/2m、架構 0B/0M/5m，皆 0 阻斷）**：紅隊——子題標籤（`labels`）取自作答格原文，作答格寫「…稱為 ____」時題目文字會經標籤在準備階段送出（現行行為）⇒ D2 明寫敘述＝題目欄、登記有意不改；驗收第 5 項掃整個目錄會被 `"S256"` 誤中 ⇒ 限縮兩檔並附負例；行號 105→110；R1–R5。架構——MODIFIED 需求漏列倍率與時限 ⇒ 補；探針檔缺指令與合併範圍 ⇒ 探針入庫 `probes/question_text_probe.py` 重跑；情境漏第 2 題、「結束後全帶」「老師任何階段」無守門 ⇒ 補情境與 `test_prompts_all_after_timed_end`。**負責人 2026-11-26 指示全部做完再測**：契約改動照傾向批准。
+
+> 與 SpecKit 組 `specs/011-question-text/research.md` R1–R5 一一對應、口徑相同（D_n＝R_n）。
 
 知識時點：2026-11-26。夾具結構以探針為準，原樣輸出 `probes/results/2026-11-26-question-text.txt`（四份夾具的表頭與題目欄逐列文字）。
 
@@ -16,7 +18,7 @@ R-02 只要求題號，現行解析因此略過題目欄。負責人 2026-11-26 
 - 題目欄找不到 ⇒ 每個子題 `prompt` 為 `""`，**匯入照常成功**（不改 R-02 的成功條件）。
 - 每個作答格（`Slot`）的 `prompt`＝**該子題所在那一列**的題目欄值：該格屬合併範圍時，只有合併範圍的錨點列取值，其餘列為 `""`（與 `_reference` 縱向合併規則相同，避免一段敘述在題組每個子題重複出現）；值去頭尾空白，保留內部換行；整數值的浮點數轉成整數字串（`1.0` ⇒ `"1"`），其餘以 `str()`。
 - 別名不與題號、作答、參考答案別名重疊（`題目` ≠ `題號`／`題次`，比對為全等）；題目欄與作答欄或參考答案欄落在同一欄時不取（同欄只歸作答或參考答案）。
-- 證偽欄｜可證偽：`probes/results/2026-11-26-question-text.txt` 四份夾具皆有題目欄——single「C4: 題目」6 列、group「C4: 題目」6 列（第 1、2 題各 2 子題逐列各一段：C5、C6、C8、C9）、variant「D8: 題目敘述」8 列、reference「C3: 題目」5 列；`test_guided_notes_parse.py` 逐子題比對，另以 openpyxl 合成「無題目欄」與「題組敘述縱向合併」兩檔做負例。
+- 證偽欄｜可證偽：`probes/results/2026-11-26-question-text.txt`（`uv run --project server python -X utf8 probes/question_text_probe.py tests/fixtures/guided-notes/*.xlsx`，含表頭、題目欄逐列全文與合併範圍）四份夾具皆有題目欄——single「C4: 題目」6 列、group「C4: 題目」6 列（第 1、2 題各 2 子題逐列各一段：C5、C6、C8、C9）、variant「D8: 題目敘述」8 列、reference「C3: 題目」5 列；`test_guided_notes_parse.py` 逐子題比對，另以 openpyxl 合成「無題目欄」與「題組敘述縱向合併」兩檔做負例。
 
 ### D2 可見性：學生只在開放作答後收到敘述
 
@@ -26,7 +28,8 @@ R-02 只要求題號，現行解析因此略過題目欄。負責人 2026-11-26 
   - `answering`／`judging`：非逐題模式每題都帶；逐題模式（`mode.sequential`）只有已開放過的題（`number in a.rounds`，含開放中、已關閉、已揭曉）帶。
   - `ended`：每題都帶。
 - 無效憑證 view 不變（不含 `questions`）。
-- 判斷集中在 `views.question_outline(a, teacher: bool)` 一處；學生預設不帶，符合條件才加（fail-closed：日後新增階段時預設不給）。
+- 判斷集中在 `views.question_outline(a, teacher: bool)` 一處；學生預設不帶，符合條件才加（fail-closed：日後新增階段時預設不給）。前端不重算可見性，只顯示收到的 `prompts`。
+- **有意不改（紅隊發現 1）**：本決策只管題目欄的敘述（`prompts`）。子題標籤（`labels`）取自作答格原文（`guided_notes._display`），學習單若把題目寫進作答格（例：「負責執行指令的核心元件稱為 ____」），題目文字會經標籤在任何階段送出——這是 `guided-notes-import` 起的現行行為，本卡不改；手冊與 README 提醒老師題目寫在題目欄、作答格只放標籤或底線。
 - 證偽欄｜屬取捨：準備階段也給敘述較方便，但原情境講義在活動開始前收回；逐題模式提早給敘述會讓各組在計時前先想答案，與時間計分（`mode-timed-scoring`）「t 為伺服器量得的作答秒數」的用意衝突。可證偽：`test_isolation.py::test_prompts_hidden_until_open`（準備階段 0 個 `prompts` 鍵）、`test_prompts_sequential_only_opened`（開第 1 題後只有第 1 題帶）。
 
 ### D3 契約：`questions[].prompts`
