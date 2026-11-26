@@ -77,7 +77,7 @@ def test_public_host_takes_precedence_over_bad_key(client):
     assert exc.value.code == 4403
 
 
-def test_bad_key_connection_gets_no_pushes(client, teacher_headers, fixture_bytes):
+def test_good_connection_unaffected_after_bad_key(client, teacher_headers, fixture_bytes):
     with client.websocket_connect("/ws?role=teacher&key=wrong") as bad:
         with pytest.raises(WebSocketDisconnect):
             bad.receive_text()
