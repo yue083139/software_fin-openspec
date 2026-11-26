@@ -4,7 +4,8 @@
 通道後端只回固定 204、不讀檔（通道是公開的，不得接檔案伺服器）。
 
 用法（負責人本機執行；會開一個瀏覽器分頁、並連 Cloudflare 建立快速通道約 5 秒／次）：
-  uv run --project server python -X utf8 probes/easy_setup_probe.py \n    --browser-url http://127.0.0.1:8000/ --cycles 3
+  uv run --project server python -X utf8 probes/easy_setup_probe.py \
+    --browser-url http://127.0.0.1:8000/ --cycles 3
 原樣輸出存 probes/results/<日期>-easy-setup.txt（通道網址已遮蔽）。
 """
 import argparse
