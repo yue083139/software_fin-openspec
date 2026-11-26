@@ -21,5 +21,5 @@
 ## 3. 驗證
 - [x] 3.1 變異實錄、真棧（`probes/results/2026-11-26-student-qr-real-stack.txt`）
 - [x] 3.2 實作輪評審（對抗通道，只掃 diff；CLEARED 0B/0M/1m）
-- [ ] 3.4 前端：`live.ts` 遇 4403 不重連、老師頁提示「老師頁只能在本機開啟」；學生連結 QR（`student_url ?? origin`，antd `QRCode`）——待 `web-workbench` 合入後
+- [x] 3.4 前端：`live.ts` 遇 4403 不重連、老師頁提示「老師頁只能在本機開啟」；學生連結 QR（`student_url ?? origin`，antd `QRCode`）——待 `web-workbench` 合入後
 - [ ] 3.3 人工驗證（負責人，場次 F）

@@ -11,7 +11,7 @@
 ## D2 老師身分只在本機
 
 - `app.is_local(headers)`：Host 去掉埠後小寫，∈ `LOCAL_HOSTNAMES = {127.0.0.1, localhost, [::1]}`，且標頭沒有 `cf-connecting-ip`、`cf-ray`。
-- 套用：`require_teacher`（全部 `/api/teacher/*`）在驗金鑰**之前**檢查，不符 ⇒ 403 `{"detail": "老師頁只能在本機開啟"}`（錯金鑰也是 403，公開網域探測不到金鑰對錯）；老師 WebSocket 不符 ⇒ 以 4403 關閉；`/api/google/callback` 不符 ⇒ 403 固定 HTML（不回顯參數）。學生與公開端點、靜態頁不限。
+- 套用：`require_teacher`（全部 `/api/teacher/*`）在驗金鑰**之前**檢查，不符 ⇒ 403 `{"detail": "老師頁只能在本機開啟"}`（錯金鑰也是 403，公開網域探測不到金鑰對錯）；老師 WebSocket 不符 ⇒ **先 accept、不送任何 view** 再以 4403 關閉（實作偏離回稿：交握前就關，瀏覽器只收到 HTTP 403、關閉碼為 1006，前端無從分辨；真實用戶端實測帶 `cf-connecting-ip` 收到關閉碼 4403、本機正常收到第一則 view）；`/api/google/callback` 不符 ⇒ 403 固定 HTML（不回顯參數）。學生與公開端點、靜態頁不限。
 - 證偽欄｜可證偽：探針②經通道 `'host': 'penny-cheap-centered-fewer.trycloudflare.com'`、`'cf-connecting-ip 存在': True`；④「經通道偽造 Host: 127.0.0.1:8020：HTTP 403」（Cloudflare 邊緣擋下，到不了本機）；②對照「本機直連、偽造 Host 與 X-Forwarded-For：'client.host': '1.2.3.4'」——uvicorn 預設信任 127.0.0.1 的 `X-Forwarded-For` 改寫 `client.host`，而通道請求都從 127.0.0.1 進來，故 `client.host` 不可用。雙條件（Host＋無 Cloudflare 標頭）任一被繞過另一條仍擋。變異實錄：拿掉標頭條件 1 failed、一律放行 5 failed。
 - 測試：TestClient 預設 Host 是 `testserver`；`conftest.py` autouse fixture 把 `testserver` 加進 `LOCAL_HOSTNAMES`（monkeypatch，正式碼不含），`is_local` 在呼叫時讀模組常數。屬取捨：不改六處 `create_app` 呼叫點、不在正式允許清單放 `testserver`。
 
@@ -19,6 +19,13 @@
 
 - `Activity.public_url`（伺服器設定，重置與重新匯入保留），`create_app(student_url=)` 設定；`teacher_view` 帶 `student_url`（無通道為 `null`，前端退回自身 origin）。學生 view 不帶。
 - 證偽欄｜可證偽：`test_student_url_only_in_teacher_view`；真棧 `probes/results/2026-11-26-student-qr-real-stack.txt`「本機老師 view student_url：https://maui-graphic-latino-logistics.trycloudflare.com/」。
+
+## D5 前端（web-workbench 合入後接上；實作輪架構藥方）
+
+- `live.ts`：`NO_RECONNECT = {4401, 4403}`、`shouldReconnect(code)`；4403 不重連。
+- 老師頁：WebSocket 4403，或任何老師 REST（含開頁即查的 Google 狀態）回 403「老師頁只能在本機開啟」 ⇒ 整頁 antd `Result`「老師頁只能在本機開啟」「請用 http://127.0.0.1:8000 開老師頁。」，不停在「連線中…」。
+- 「學生連結」分區：`student_url ?? origin + "/"` 的網址文字、「複製連結」按鈕、antd `QRCode`（220 px）；`student_url` 為 null 時顯示「目前只在本機可連；要讓手機掃碼請用 start-tunnel.cmd 或 make dev-tunnel 啟動」。
+- 證偽欄｜可證偽：`web/src/live.test.tsx`（4403 後 5 秒內不開新連線、1006 一秒後重連）；`web/src/pages/qr.test.tsx`（QR 值＝`student_url`；null 退回 origin 並提示；本機提示文案）。
 
 ## D4 不變
 
