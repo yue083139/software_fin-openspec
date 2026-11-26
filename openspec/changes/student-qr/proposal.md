@@ -1,6 +1,8 @@
-# student-qr — Cloudflare 快速通道讓手機掃 QR code 進學生頁，老師端限本機（v1.0）
+# student-qr — Cloudflare 快速通道讓手機掃 QR code 進學生頁，老師端限本機（v1.1，評審後定稿）
 
-檔位：**B**（使用者可感知的行為：啟動選項、老師 view 新欄位、老師端點對非本機回 403）｜主人：@yue083139｜parity：`docs/parity.md` §4 `student-qr`（合流時登記）｜需求：X-04｜依賴：`app-skeleton`
+檔位：**S**（`contracts/`、OAuth 回呼與安全邊界：老師身分限本機；原判 B，架構通道評審改 S）｜主人：@yue083139｜parity：`docs/parity.md` §4 `student-qr`｜需求：X-04｜依賴：`app-skeleton`
+**v1.1 評審（S 檔壓縮版一輪：提案輪架構全卡掃＋實作輪對抗 diff，雙通道）**：架構 0B/3M/1m、對抗 0B/0M/1m，皆 CLEARED。藥方——檔位改 S、提交標 `[CORE]`；`docs/parity.md` §4／§5 登記；前端遇 4403 不重連並提示「老師頁只能在本機開啟」（併入 `web-workbench` 合入後接上）；註解決策編號訂正、`contracts/api.md` WebSocket 關閉代碼補 4403；`tunnel.URL` 只認 `INF |` 表框列且排除 `api.trycloudflare.com`，補兩條負例。
+
 負責人 2026-11-26 裁：學生連結要能用手機掃 QR code；走 Cloudflare 快速通道（非區網模式）；老師端點與老師 WebSocket 只接受本機 Host；OAuth 維持 127.0.0.1。前端 QR 畫面併入 `web-workbench`（antd `QRCode`），本卡只做伺服器、啟動與文件。
 
 ## 首屏決策摘要

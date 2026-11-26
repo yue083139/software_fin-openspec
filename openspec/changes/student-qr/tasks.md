@@ -1,9 +1,9 @@
-# student-qr — tasks（v1.0）
+# student-qr — tasks（v1.1）
 
 ## 0. 提案前置
 - [x] 0.1 探針 `probes/cloudflared_probe.py`：網址輸出列、經通道的標頭、WebSocket、偽造 Host；原樣輸出 `probes/results/2026-11-26-cloudflared.txt`（公網 IP 已遮蔽）
-- [ ] 0.2 提案輪評審（架構通道，全卡掃）
-- [ ] 0.3 `docs/parity.md` §4 登記（合流時，與 SpecKit 同批）
+- [x] 0.2 提案輪評審（架構通道，全卡掃；CLEARED 0B/3M/1m）
+- [x] 0.3 `docs/parity.md` §4、§5 登記（與 SpecKit 同批）
 
 ## 1. 驗收測試（先寫，先紅）
 - [x] 1.1 `server/tests/test_api_host.py`
@@ -20,5 +20,6 @@
 
 ## 3. 驗證
 - [x] 3.1 變異實錄、真棧（`probes/results/2026-11-26-student-qr-real-stack.txt`）
-- [ ] 3.2 實作輪評審（對抗通道，只掃 diff）
+- [x] 3.2 實作輪評審（對抗通道，只掃 diff；CLEARED 0B/0M/1m）
+- [ ] 3.4 前端：`live.ts` 遇 4403 不重連、老師頁提示「老師頁只能在本機開啟」；學生連結 QR（`student_url ?? origin`，antd `QRCode`）——待 `web-workbench` 合入後
 - [ ] 3.3 人工驗證（負責人，場次 F）

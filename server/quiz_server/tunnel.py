@@ -1,4 +1,4 @@
-"""Cloudflare 快速通道（student-qr D3）：讓手機以公開 https 網址連到學生頁。
+"""Cloudflare 快速通道（student-qr D1）：讓手機以公開 https 網址連到學生頁。
 
 只在 `--tunnel` 或 `QUIZ_TUNNEL=1` 時啟動；找不到 cloudflared 或逾時拿不到網址 ⇒ 回 None，伺服器照常只開本機。
 通道網址每次啟動都不同；DNS 生效約需數十秒（探針 2026-11-26：第 31 次、約 60 秒後才連得上）。
@@ -11,7 +11,8 @@ import time
 from pathlib import Path
 from typing import IO
 
-URL = re.compile(r"^.*?\|\s+(https://[a-z0-9-]+\.trycloudflare\.com)\s+\|")
+# 只認 INF 等級的表框列，且排除 cloudflared 自己的 API 網域（實作輪對抗評審）
+URL = re.compile(r"(?:^|\s)INF \|\s+(https://(?!api\.)[a-z0-9-]+\.trycloudflare\.com)\s+\|")
 # winget 安裝後要重開終端機 PATH 才更新；先找 PATH，再找預設安裝位置
 KNOWN_PATHS = (Path(r"C:\Program Files (x86)\cloudflared\cloudflared.exe"),
                Path(r"C:\Program Files\cloudflared\cloudflared.exe"))
@@ -26,7 +27,7 @@ def find_cloudflared() -> str | None:
 
 def parse_url(line: str) -> str | None:
     """cloudflared 把網址印在一個表框列裡（`INF |  https://….trycloudflare.com  |`）；只認這種列。"""
-    m = URL.match(line)
+    m = URL.search(line)
     return m.group(1) + "/" if m else None
 
 

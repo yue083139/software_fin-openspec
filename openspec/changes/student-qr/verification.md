@@ -1,4 +1,20 @@
-# student-qr — verification（v1.0）
+# student-qr — verification（v1.1）
+
+## 評審紀錄
+
+S 檔壓縮版一輪（提案輪架構全卡掃＋實作輪對抗 diff，雙通道）：架構 **CLEARED（0B/3M/1m）**、對抗 **CLEARED（0B/0M/1m）**。
+
+| 藥方 | 落點 |
+|---|---|
+| 架構重要：檔位 B→S、提交標 `[CORE]` | `proposal.md` 抬頭；本提交 |
+| 架構重要：parity 登記 | `docs/parity.md` §4 `student-qr` 列、§5 2026-11-26 列（兩組逐位元組相同） |
+| 架構重要：前端 4403 不重連並提示 | 待 `web-workbench` 合入後 rebase 再做（同時接學生連結 QR） |
+| 架構次要：註解決策編號、contracts WebSocket 關閉代碼補 4403 | `tunnel.py:1` D1、`views.py` D3、`test_tunnel.py:1` D1；`contracts/api.md`「WebSocket `/ws`」段 |
+| 對抗次要：`URL` 只認 `INF |`、排除 `api.` | `tunnel.py` `URL`、`parse_url` 改 `search`；`test_tunnel.py::test_parse_url_ignores_other_lines` 補三條負例 |
+
+## followup（不阻塞）
+
+- 以 `--host 0.0.0.0` 啟動時，同區網的人偽造 `Host: 127.0.0.1` 且不帶 Cloudflare 標頭會被判為本機——仍須老師金鑰，與改版前同強度；預設只綁 127.0.0.1，不另處理。主人：@yue083139。
 
 ## 變異實錄
 

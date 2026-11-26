@@ -1,4 +1,4 @@
-"""student-qr D3：cloudflared 輸出解析與啟動失敗退回本機模式（不真起 cloudflared）。"""
+"""student-qr D1：cloudflared 輸出解析與啟動失敗退回本機模式（不真起 cloudflared）。"""
 import io
 
 from quiz_server import tunnel
@@ -13,7 +13,10 @@ def test_parse_url_from_real_output_line():
 def test_parse_url_ignores_other_lines():
     for line in ["INF Requesting new quick Tunnel on trycloudflare.com...",
                  "INF +----------------------------+", "https://api.trycloudflare.com/tunnel",
-                 "https://evil.example/https://x.trycloudflare.com"]:
+                 "https://evil.example/https://x.trycloudflare.com",
+                 "ERR | https://api.trycloudflare.com |",
+                 "WRN foo|  https://phish.trycloudflare.com  |",
+                 "2026-11-26T12:54:52Z INF |  https://api.trycloudflare.com  |"]:
         assert tunnel.parse_url(line) is None
 
 

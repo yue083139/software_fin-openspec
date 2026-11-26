@@ -1,10 +1,10 @@
-# student-qr — design（v1.0）
+# student-qr — design（v1.1）
 
 知識時點：2026-11-26。cloudflared 2026.11.2（winget `Cloudflare.cloudflared`）。外部行為以探針為準：`uv run --project server python -X utf8 probes/cloudflared_probe.py "C:/Program Files (x86)/cloudflared/cloudflared.exe"`，原樣輸出 `probes/results/2026-11-26-cloudflared.txt`（公網 IP 已遮蔽）。
 
 ## D1 通道：子行程起 cloudflared 快速通道，讀輸出取網址
 
-- `quiz_server/tunnel.py`：`find_cloudflared()` 先 `shutil.which`，再找 `C:\Program Files (x86)\cloudflared\cloudflared.exe`、`C:\Program Files\cloudflared\cloudflared.exe`（winget 裝完要重開終端機 PATH 才更新）。`Tunnel.start()` 執行 `cloudflared tunnel --no-autoupdate --url http://127.0.0.1:<埠>`，合併 stdout／stderr，逐行以 `^.*?\|\s+(https://[a-z0-9-]+\.trycloudflare\.com)\s+\|` 比對（只認表框列，不誤認 `api.trycloudflare.com` 等雜訊）；30 秒內沒拿到 ⇒ 結束子行程、回 `None`。拿到後另起執行緒讀掉輸出（不印），避免管線塞滿。伺服器結束（`finally`）時 `terminate`，10 秒不退再 `kill`。
+- `quiz_server/tunnel.py`：`find_cloudflared()` 先 `shutil.which`，再找 `C:\Program Files (x86)\cloudflared\cloudflared.exe`、`C:\Program Files\cloudflared\cloudflared.exe`（winget 裝完要重開終端機 PATH 才更新）。`Tunnel.start()` 執行 `cloudflared tunnel --no-autoupdate --url http://127.0.0.1:<埠>`，合併 stdout／stderr，逐行以 `(?:^|\s)INF \|\s+(https://(?!api\.)[a-z0-9-]+\.trycloudflare\.com)\s+\|` 搜尋（只認 INF 等級的表框列、排除 `api.trycloudflare.com`；實作輪對抗評審）；30 秒內沒拿到 ⇒ 結束子行程、回 `None`。拿到後另起執行緒讀掉輸出（不印），避免管線塞滿。伺服器結束（`finally`）時 `terminate`，10 秒不退再 `kill`。
 - 啟動：`python -m quiz_server --tunnel` 或 `QUIZ_TUNNEL=1`；`make dev-tunnel`；`start-tunnel.cmd`（`start.ps1 -Tunnel`）。終端機印學生公開網址與「約需 1 分鐘才連得上」。
 - 證偽欄｜可證偽：探針①「含網址的輸出行（3.3 秒）：2026-11-26T12:54:52Z INF |  https://penny-cheap-centered-fewer.trycloudflare.com  |」；②「經通道 GET /echo（第 31 次嘗試）」——新網域 DNS 約 60 秒才在本機解析得到，故提示一分鐘。`test_tunnel.py` 以該列原文做解析測試。屬取捨：不用 `cloudflared` 的 `--metrics` API 取網址（多一個埠、多一層版本相依），讀輸出最簡單。
 
