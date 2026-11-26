@@ -19,6 +19,21 @@ Totals: 12 passed, 0 failed (12 items)
 gate-agents: 0 處漂移
 ```
 
+前端整合後（rebase 於 `origin/dev` `4ffd29f`，含 `web-workbench`）`make gate-pr` exit 0，前端另連跑一次 48 passed：
+
+```
+All checks passed!
+All checks passed!
+297 passed, 1 warning in 15.61s
+48 passed in 5.05s
+ Test Files  9 passed (9)
+      Tests  48 passed (48)
+gate-zh-hant: 0 處簡體字
+gate-secrets: 0 findings
+Totals: 13 passed, 0 failed (13 items)
+gate-agents: 0 處漂移
+```
+
 ## 變異實錄（門禁類斷言錯時會紅）
 
 | 變異 | 指令 | 結果 |

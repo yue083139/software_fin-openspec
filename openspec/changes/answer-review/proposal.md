@@ -53,8 +53,8 @@
 | 3 | `uv run --project server pytest -q server/tests/test_results_view.py` | 檢查後老師 `board` 與學生 `results` 得主、分數一致；passed |
 | 4 | `uv run --project server pytest -q server/tests/test_google_sheets.py server/tests/test_api_export.py` | 寫回含全部子題（無得主寫原標籤）；copy 名稱「<原標題>_作答情況」；下載檔名 `group_作答情況.xlsx`；xlsx 寫入檢查後得主；passed |
 | 5 | `uv run --project server pytest -q server/tests/test_isolation.py` | `answering`／`judging` 學生 payload 仍不含他組答案與判定（檢查只在 `ended`）；passed |
-| 6 | `npm --prefix web test` | 前端按鈕由 `web-workbench`（antd）整合時接上；本卡 web 不改 |
-| 7 | `git grep -n -- '-搶答結果' -- server contracts README.md docs/requirements.md docs/manual-verification.md` | 無輸出（`web/src/pages/ImportPanel.tsx` 留 `web-workbench` 整合） |
+| 6 | `npm --prefix web test` | `review.test.tsx`：只有候選格有「答對」「答錯」、判錯標 ✗、鎖定標 ✓「已鎖定」與「重設本題」、全部答錯無得主、經典 ended 才出現、匯出中停用、學生結果 ✓／✗；passed |
+| 7 | `git grep -n -- '-搶答結果' -- server web/src contracts README.md docs/requirements.md docs/manual-verification.md docs/parity.md` | 無輸出 |
 | 8 | 人工驗證 | `docs/manual-verification.md` 場次 A：順位 1 判錯換順位 2、判對鎖定、匯出副本與 xlsx 為鎖定答案、副本名稱「_作答情況」 |
 
 ## 實錄結果
