@@ -1,4 +1,4 @@
-# web-workbench — 前端改用 antd 工作檯版型（v1.0，提案輪評審前草稿）
+# web-workbench — 前端改用 antd 工作檯版型（v1.1，提案輪架構 CLEARED、實作輪對抗藥方已落）
 
 檔位：**B**（介面流程與版面；行為、文案、作答隔離與 API 不變）｜主人：@yue083139｜parity：`docs/parity.md` §4 `web-workbench`（已登記）｜需求：R-01、R-04｜依賴：`question-text`（從 `feat/question-text` 50c3605 起）
 
@@ -8,7 +8,7 @@
 2. **視覺語言仿 resolve 工作檯**：色票單一出處 `web/src/theme.ts`（主色 `#0f7c83`）、背景光暈＋玻璃頂欄與側欄 `web/src/styles.css`／屬取捨：只取視覺與版型，不搬 resolve 業務碼、不引路由與資料快取套件。
 3. **老師頁＝左側導覽＋內容卡**；導覽點擊捲動到對應卡，**所有卡同時渲染**（不做分頁切換）／理由：老師搶答中要同時看控制鈕與作答表；既有元件測試以 `TeacherPanel` 整頁渲染斷言，不需改語意。
 4. **學生頁與首頁＝置中窄版卡片**，手機寬度可用（`student-qr` 將讓學生以手機掃碼進入）／可被人工驗證（手機寬度截圖）證偽。
-5. **行為與文案不變**：所有按鈕文字、`aria-label`、提示句沿用；測試只把「找按鈕」從文字節點改為其外層 `<button>`（antd 把文字包在 `<span>`），斷言不改／可被 `npm --prefix web test` 41 項全綠證偽。
+5. **行為、按鈕文字、`aria-label` 與提示句不變**（卡片標題與頁首依新版型調整，清單見 design D5）：測試只把「找按鈕」從文字節點改為其外層 `<button>`（antd 把文字包在 `<span>`），斷言不改／可被 `npm --prefix web test` 41 項全綠證偽。
 
 **矩陣落點**：無新列——不新增行為；M-001、M-002、M-004 的 web 守門（`web/src/pages/*.test.tsx`）全數沿用並維持綠。
 

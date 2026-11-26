@@ -1,4 +1,6 @@
 import "@testing-library/jest-dom/vitest";
+// 預先載入 antd：首次匯入的成本算在 setup，不落到第一個測試的逾時裡
+import "antd";
 
 // antd 在 jsdom 需要的瀏覽器 API（Grid 斷點、Table 捲動量測、QRCode canvas）
 if (!window.matchMedia) {
