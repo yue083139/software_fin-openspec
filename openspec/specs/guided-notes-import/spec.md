@@ -1,7 +1,7 @@
 # guided-notes-import Specification
 
 ## Purpose
-以表頭文字與合併範圍動態定位，從 xlsx 檔或 Google 試算表連結匯入 Guided Notes 為題目清單，且學生只看得到題號與子題結構的規則。
+以表頭文字與合併範圍動態定位，從 xlsx 檔或 Google 試算表連結匯入 Guided Notes 為題目清單，含可選的題目敘述，以及學生依階段只看得到題號、子題結構與已開放題目敘述的規則。
 
 ## Requirements
 
@@ -23,11 +23,31 @@
 
 ### Requirement: 學生端只看得到題號與子題結構
 
-學生 MUST 只收到題號、子題數與子題標籤，MUST NOT 收到作答格座標或原檔內容。
+學生 MUST 只收到題號、子題數、子題標籤、倍率與時限（`contracts/api.md` 的 `questions[]` 欄位），以及依階段開放的題目敘述，MUST NOT 收到作答格座標、參考答案或原檔其他內容。題目敘述 MUST 只在搶答開始後送給學生：準備階段 MUST NOT 帶敘述；逐題開放的模式 MUST 只帶已開放過的題；結束後 MUST 帶全部。老師 MUST 在任何階段都看得到敘述。
 
 #### Scenario: 學生看到題目清單
 - **WHEN** 老師匯入成功後學生查看畫面
 - **THEN** 學生畫面 MUST 依序列出每個題號與其子題輸入欄
+
+#### Scenario: 準備階段看不到敘述
+- **WHEN** 活動在準備階段
+- **THEN** 學生 view 的每一題 MUST NOT 含 `prompts`
+
+#### Scenario: 開始搶答後看到敘述
+- **WHEN** 老師以經典搶答開始搶答
+- **THEN** 學生 view 每一題 MUST 含 `prompts`，長度 MUST 等於子題數，且 payload MUST NOT 含他組答案
+
+#### Scenario: 老師任何階段都看得到敘述
+- **WHEN** 活動在準備階段
+- **THEN** 老師 view 每一題 MUST 含 `prompts`
+
+#### Scenario: 結束後全部帶敘述
+- **WHEN** 時間計分模式只開放過第 1 題就結束活動
+- **THEN** 學生 view 每一題 MUST 含 `prompts`
+
+#### Scenario: 逐題模式只給已開放題
+- **WHEN** 時間計分模式只開放了第 1 題
+- **THEN** 學生 view 只有第 1 題 MUST 含 `prompts`，其餘題 MUST NOT 含
 
 ### Requirement: 匯入時可選讀取參考答案欄
 
@@ -51,7 +71,7 @@
 
 #### Scenario: 以 Google 試算表連結匯入
 - **WHEN** 已登入的老師貼上「題組＋單題」範本的 `https://docs.google.com/spreadsheets/d/<id>/edit#gid=0`
-- **THEN** 伺服器 MUST 先以 Drive 複製一份「<原標題>-搶答結果」副本，再以 Sheets API 讀取副本該分頁的值與合併範圍，題目清單與作答格位置 MUST 與上傳同一範本的 xlsx 相同，回應 MUST 含副本連結
+- **THEN** 伺服器 MUST 先以 Drive 複製一份「<原標題>_作答情況」副本，再以 Sheets API 讀取副本該分頁的值與合併範圍，題目清單與作答格位置 MUST 與上傳同一範本的 xlsx 相同，回應 MUST 含副本連結
 - **AND** 伺服器 MUST NOT 對 `/export?format=xlsx` 發出請求
 
 #### Scenario: 未登入不得以連結匯入
@@ -77,3 +97,19 @@
 #### Scenario: 單題作答格不受影響
 - **WHEN** 匯入官方「單題」範本（作答格本身為橫向合併範圍）
 - **THEN** 每題填空格 MUST 為該合併範圍左上角，與本規則實施前相同
+
+### Requirement: 匯入時可選讀取題目敘述
+
+系統 MUST 在表頭列以別名（題目、題目敘述、問題、題幹、question）尋找可選的題目欄；找到時每個子題的敘述 MUST 取自該子題所在列的題目欄值（縱向合併只取錨點列），找不到時敘述 MUST 為空字串且匯入 MUST 照常成功。敘述 MUST NOT 參與作答格定位與寫回。
+
+#### Scenario: 官方題組範本的子題敘述
+- **WHEN** 老師匯入「題組＋單題」範本
+- **THEN** 第 1、2 題的兩個子題 MUST 各有自己那一列的題目敘述，第 3、4 題 MUST 各有一段敘述
+
+#### Scenario: 沒有題目欄
+- **WHEN** 匯入的檔案表頭只有題號與作答欄
+- **THEN** 匯入 MUST 成功，題數 MUST 與原檔一致，每個子題敘述 MUST 為空字串
+
+#### Scenario: 匯出不受敘述影響
+- **WHEN** 老師在結束後匯出
+- **THEN** 寫回的儲存格與內容 MUST 與未讀取敘述時相同
