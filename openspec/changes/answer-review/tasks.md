@@ -25,6 +25,6 @@
 
 ## 3. 驗證
 - [x] 3.1 `make gate` 原樣輸出寫入 `verification.md`
-- [ ] 3.2 實作輪評審（雙通道 1 輪）
+- [x] 3.2 實作輪評審（紅隊 CLEARED 0B/0M/2m、架構 CLEARED 0B/0M/0m；次要藥方已落）
 - [ ] 3.3 人工驗證（負責人，`docs/manual-verification.md` 場次 A：判錯遞補、判對鎖定、重設、匯出副本與 xlsx、副本名稱）
 - [ ] 3.4 `docs/parity.md` 狀態更新、`make gate-parity SIBLING=../software_fin-speckit` 綠
