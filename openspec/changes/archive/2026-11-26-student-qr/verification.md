@@ -55,4 +55,6 @@ gate-agents: 0 處漂移
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（負責人，`docs/manual-verification.md` 場次 F）。
+狀態：**已執行**（`docs/manual-verification.md` 場次 F）。
+
+結果：✅ 全部符合（jinny／2026-11-26／`dev` `1639b7a`，Windows 11＋Chrome＋手機，cloudflared 2026.11.2）。第 1 步：`start-tunnel.cmd` 印出 trycloudflare 學生網址；第 2 步：老師頁「學生連結」QR code 網址與視窗相同、「複製連結」變「已複製」；第 3 步：手機掃碼加入第1組、送出第 3 題，老師表即時出現，電腦第2組看不到；第 4 步：公開網址開老師頁顯示「老師頁只能在本機開啟」，不停在「連線中…」；第 5 步：關閉視窗後手機斷線，無殘留 `cloudflared.exe`、8000 埠已釋放。
