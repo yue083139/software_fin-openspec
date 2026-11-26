@@ -9,7 +9,7 @@
 - **THEN** 狀態 MUST 變為 `configured: true` 且只回遮罩後的用戶端 ID，按「以 Google 帳號登入」MUST 取得含新用戶端 ID 的授權網址
 
 #### Scenario: 格式不符或含換行
-- **WHEN** 送出的密鑰不以 `GOCSPX-` 開頭、含換行或 `=`、或超過 128 字
+- **WHEN** 送出的密鑰不以 `GOCSPX-` 開頭、含換行（含尾端換行）或 `=`、或超過 128 字
 - **THEN** 伺服器 MUST 回 422 且 `.env` 內容 MUST 不變，回應 MUST NOT 回顯輸入值
 
 #### Scenario: 經公開網址設定
@@ -19,6 +19,10 @@
 #### Scenario: 已登入時變更
 - **WHEN** 老師已登入 Google 時送出新設定或清除設定
 - **THEN** 伺服器 MUST 回 409「請先登出 Google 再變更設定」且設定 MUST 不變
+
+#### Scenario: 設定變更前發起的登入
+- **WHEN** 老師以舊設定發起登入、尚未完成時又儲存了新設定，之後舊的授權回呼抵達
+- **THEN** 伺服器 MUST NOT 以舊授權完成登入
 
 #### Scenario: 清除設定
 - **WHEN** 老師在未登入時按「清除設定」
