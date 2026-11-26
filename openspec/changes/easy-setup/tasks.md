@@ -1,8 +1,8 @@
-# easy-setup — tasks（v1.0）
+# easy-setup — tasks（v1.0 定稿送審）
 
 ## 0. 提案前置
 - [x] 0.1 探針③：PATH 刷新（`probes/results/2026-11-26-easy-setup.txt`）
-- [ ] 0.2 探針①②：負責人本機執行 `uv run --project server python -X utf8 probes/easy_setup_probe.py --browser-url http://127.0.0.1:8000/ --cycles 3`，原樣輸出回填結果檔與 design D1、D3 證偽欄（起草會話被權限拒絕；阻塞定稿）
+- [x] 0.2 探針①②：負責人本機執行 `uv run --project server python -X utf8 probes/easy_setup_probe.py --browser-url http://127.0.0.1:8000/ --cycles 3`，原樣輸出回填結果檔與 design D1、D3 證偽欄（2026-11-26 負責人主會話執行並回填；探針改固定 204 handler）
 - [x] 0.3 `docs/parity.md` §4 登記本卡、§5 記變更；SpecKit 組同批起稿（`specs/017-easy-setup/`）
 - [ ] 0.4 提案輪評審（紅隊＋架構雙通道，1 輪）；藥方併入下一版；負責人批准 `contracts/api.md` 改動（D6）
 
