@@ -2,7 +2,7 @@
 
 ### Requirement: 老師可把搶答成功的答案匯出至原 Guided Notes
 
-搶答結束後，若題目來自 Google 試算表，老師 MUST 能把結果寫回雲端：系統 MUST 在匯入時就複製一份原試算表並解析該副本，結束後再以 Google Sheets API 把每題搶答成功組別的答案寫入副本中該題的填空格，原試算表 MUST NOT 被修改；老師 MUST 也能改下載 xlsx 作為備援。題目來自上傳 xlsx 時，老師 MUST 能下載寫好答案的 xlsx。題組的每個子題答案 MUST 寫入對應的子題填空格。搶答成功者以老師檢查後的結果為準（見 buzz-answering）；寫回 Google 試算表 MUST 每次寫入全部作答格，沒有搶答成功者的作答格 MUST 寫回原內容，使重複匯出與目前結果一致。
+搶答結束後，若題目來自 Google 試算表，老師 MUST 能把結果寫回雲端：系統 MUST 在匯入時就複製一份原試算表並解析該副本，結束後再以 Google Sheets API 把每題搶答成功組別的答案寫入副本中該題的填空格，原試算表 MUST NOT 被修改；老師 MUST 也能改下載 xlsx 作為備援。題目來自上傳 xlsx 時，老師 MUST 能下載寫好答案的 xlsx。題組的每個子題答案 MUST 寫入對應的子題填空格。搶答成功者以老師檢查後的結果為準（見 buzz-answering）；寫回 Google 試算表 MUST 寫入目前有搶答成功者的作答格，並 MUST 把上次寫回寫過、這次已無搶答成功者的作答格還原為匯入時的原內容；沒有搶答成功者且從未寫過的作答格 MUST NOT 被寫入。匯出與寫回 MUST 依序執行，不得交錯。
 
 #### Scenario: 寫回 Google 試算表副本
 - **WHEN** 題目以 Google 試算表連結匯入、搶答結束後老師按「匯出到 Google 試算表」
