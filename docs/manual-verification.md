@@ -181,6 +181,6 @@
 | F | `student-qr` | ✅ | 2026-11-26 jinny（Chrome＋手機）依 `1639b7a` 版場次 F（`start-tunnel.cmd` 啟動）第 1～5 步全部符合。`easy-setup` 改版後的第 1、2、5、6 步（老師頁「開啟／關閉手機連線」）待重驗。 |
 | G | `teacher-key-hidden` | ✅ | 2026-11-26 jinny（Chrome）第 1～6 步全部符合（第 4、5 步同時涵蓋 `teacher-key-error`）。 |
 | H | `easy-setup` | 待執行 | |
-| I | `results-podium` | 待執行 | |
+| I | `results-podium` | ✅ | 2026-11-27 jinny（Windows 11，本機瀏覽器）依 `b88a624`（`feat/results-podium`）第 1～4 步全部符合；第 3 步判錯後兩組同分並列第 1、無第 2 名，老師頁與學生頁即時更新。第 5 步（選做）未執行。 |
 
 各卡原始步驟：OpenSpec 組 `openspec/changes/archive/<日期>-<卡名>/verification.md`；SpecKit 組 `specs/<NNN>-<卡名>/verification.md`。

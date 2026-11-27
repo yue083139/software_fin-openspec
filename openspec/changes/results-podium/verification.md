@@ -38,4 +38,6 @@ web 第二次 `npm --prefix web test`：`Tests  90 passed (90)`。
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（`docs/manual-verification.md` 場次 I）。
+狀態：**已執行**（`docs/manual-verification.md` 場次 I）。
+
+結果：✅ 第 1～4 步全部符合（jinny／2026-11-27／`feat/results-podium` `b88a624`，Windows 11 本機瀏覽器）。老師頁亞軍、冠軍由左到右、0 分組不上台；學生頁三組「本組」標籤位置正確；判錯後同分並列第 1 且無第 2 名、即時更新；重置後消失、全部 0 分不顯示。第 5 步（選做，其他模式欄名「得分」）未執行，由單元測試 `scoreLabel` 例涵蓋。
