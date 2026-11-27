@@ -5,7 +5,7 @@
 本機（Windows 11，無 `make`）依 `Makefile` 的 `gate-pr` 逐項執行，2026-11-27，分支 `feat/podium-confetti`（接在 `feat/live-feed` 之後，自 `origin/dev` `14d02b7`）：
 
 ```
-npm --prefix web test                    → Tests  103 passed (103)
+npm --prefix web test                    → Tests  106 passed (106)（rebase 到 live-feed v1.1 之後）
 npm --prefix web run lint                → 無輸出（exit 0）
 npm --prefix web run typecheck           → 無輸出（exit 0）
 gate-zh-hant: 0 處簡體字
@@ -13,7 +13,7 @@ gate-secrets: 0 findings
 openspec validate podium-confetti --strict → Change 'podium-confetti' is valid
 ```
 
-web 第二次 `npm --prefix web test`：`Tests  103 passed (103)`。伺服器與 `ops/` 未改。
+web 第二次 `npm --prefix web test`：`Tests  106 passed (106)`。伺服器與 `ops/` 未改。
 
 ## 變異實錄（錯時會紅）
 
