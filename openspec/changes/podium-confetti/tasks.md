@@ -10,5 +10,5 @@
 
 ## 3. 驗證
 - [x] 3.1 `npm --prefix web test` 連跑兩次、`lint`、`typecheck` 綠；變異實錄
-- [ ] 3.2 評審（架構全卡掃＋對抗 diff）
+- [x] 3.2 評審（架構全卡掃＋對抗 diff，皆 CLEARED；次要訂正已落，見 `verification.md`）
 - [ ] 3.3 人工驗證（`docs/manual-verification.md` 場次 K）
