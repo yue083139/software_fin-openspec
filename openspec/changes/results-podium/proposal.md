@@ -28,7 +28,7 @@
 
 | # | 指令 | 期望 |
 |---|---|---|
-| 1 | `npm --prefix web test` | `podium.test.tsx` 10 例與既有測試全綠（連跑兩次） |
+| 1 | `npm --prefix web test` | `podium.test.tsx` 13 例與既有測試全綠（連跑兩次） |
 | 2 | `npm --prefix web run lint`、`run typecheck` | 無錯 |
 | 3 | 人工驗證 | 經典搶答結束 ⇒ 老師頁與學生頁出現領獎台，名次與分數表一致；檢查答錯後名次即時跟著變；全部 0 分不出現 |
 
