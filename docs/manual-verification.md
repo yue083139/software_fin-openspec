@@ -192,6 +192,6 @@
 | G | `teacher-key-hidden` | ✅ | 2026-11-26 jinny（Chrome）第 1～6 步全部符合（第 4、5 步同時涵蓋 `teacher-key-error`）。 |
 | H | `easy-setup` | 待執行 | |
 | I | `results-podium` | ✅ | 2026-11-27 jinny（Windows 11，本機瀏覽器）依 `b88a624`（`feat/results-podium`）第 1～4 步全部符合；第 3 步判錯後兩組同分並列第 1、無第 2 名，老師頁與學生頁即時更新。第 5 步（選做）未執行。 |
-| J | `live-feed` | 待執行 | |
+| J | `live-feed` | ✅ | 2026-11-27 jinny（Windows 11，本機瀏覽器）依 `beeb8c6`（`feat/podium-confetti`，含本卡）第 1～5 步全部符合：開始搶答不跳、第2組「搶下第 3 題！」約 3 秒消失且不含答案、第1組「送出第 3 題」、F5 不重跳、學生頁無快訊。 |
 
 各卡原始步驟：OpenSpec 組 `openspec/changes/archive/<日期>-<卡名>/verification.md`；SpecKit 組 `specs/<NNN>-<卡名>/verification.md`。
