@@ -25,8 +25,8 @@
 - [x] 4.1 執行 `uv run --project server python probes/team_limit_50_capacity_probe.py`，確認 300/300 狀態一致且 p95 ≤ 2 秒，原樣輸出見 `probes/results/2026-11-28-team-limit-50-capacity-implementation.txt`。
 - [x] 4.2 依 `docs/manual-verification.md` 新增並執行場次：一般桌面與 768 px 寬下 30 秒內找到第50組、加入、釋放、重新加入，並檢查結果表／組隊狀態；記錄日期、環境、步驟、結果與證據。
 - [x] 4.3 執行 `make gate-pr` 與 S 檔全量 `make gate`，門禁計數為 server 248 passed、ops 41 passed、web 35 passed；繁體中文 0、secrets 0、OpenSpec 10 passed、agents 0 漂移。
-- [x] 4.4 執行 `make gate-parity SIBLING=../software_fin-speckit`，輸出 `gate-parity: 0 處不一致`；PR 尚未建立，待負責人建立後互連狀態再更新。
-- [x] 4.5 依 `$review-dispatch` 建立實作輪紅隊與架構派單，完成 S 檔唯一實作輪與原通道回驗；紅隊與架構均 `CLEARED`，報告見 `implementation-red.dispatch.review-red.md`、`implementation-arch.dispatch.review-arch.md`。人工驗證仍須按 4.2 完成，不得當作已綠。
+- [x] 4.4 執行 `make gate-parity SIBLING=../software_fin-speckit`，輸出 `gate-parity: 0 處不一致`；OpenSpec PR #45 與 SpecKit PR #39 已建立，待兩邊 parity 修訂同步合入。
+- [x] 4.5 依 `$review-dispatch` 建立實作輪紅隊與架構派單，完成 S 檔唯一實作輪與原通道回驗；紅隊與架構均 `CLEARED`，報告見 `implementation-red.dispatch.review-red.md`、`implementation-arch.dispatch.review-arch.md`。人工驗證依 4.2 完成，紀錄見 `verification.md`。
 
 ## Workflow follow-up
 
