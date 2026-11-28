@@ -22,7 +22,7 @@ from fastapi import (
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from . import results
 from .activity import Activity, AlreadySubmittedError, InviteCodeError, TeamTakenError
@@ -37,6 +37,8 @@ WS_UNAUTHORIZED = 4401
 
 
 class TeamsBody(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+
     count: int
 
 

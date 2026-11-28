@@ -113,6 +113,23 @@ def test_concurrent_same_question(fixture_bytes):
         assert sum(r.is_winner for r in ranked) == 1
 
 
+def test_fifty_teams_concurrent_ranks_are_unique_with_one_winner(fixture_bytes):
+    a = Activity()
+    asyncio.run(a.load_questions(fixture_bytes("group.xlsx"), "group.xlsx"))
+    asyncio.run(a.configure_teams(50))
+    asyncio.run(a.start())
+
+    async def go():
+        return await asyncio.gather(*(a.submit(team, 3, [team]) for team in a.teams))
+
+    submissions = asyncio.run(go())
+    ranked = a.rule.rank(a.submissions[3])
+    assert len(submissions) == 50
+    assert sorted(item.seq for item in submissions) == list(range(1, 51))
+    assert sorted(item.rank for item in ranked) == list(range(1, 51))
+    assert sum(item.is_winner for item in ranked) == 1
+
+
 def test_concurrent_same_team_same_question(fixture_bytes):
     a = _started(fixture_bytes)
 

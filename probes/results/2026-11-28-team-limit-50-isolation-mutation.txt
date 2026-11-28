@@ -1,0 +1,10 @@
+反變異目的：驗證學生 WebSocket 若誤用老師 view，50 組隔離測試會紅。
+變異：server/quiz_server/app.py 的 WebSocket payload builder 暫改為 view_for("teacher", None, act)。測試後已復原為 view_for(role, team, act)。
+
+原樣輸出摘要：
+FAILED server/tests/test_isolation.py::test_fifty_team_student_payloads_do_not_leak_other_answers
+assert all(answer not in raw for answer in peer_answers)
+E assert False
+1 failed, 1 warning in 2.89s
+
+失敗斷言直接命中第2–50組合成答案在第1組 WebSocket payload 出現；復原後將重跑測試確認綠。
