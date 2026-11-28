@@ -29,3 +29,7 @@
 #### Scenario: 五十組不放寬作答隔離
 - **WHEN** 活動有 50 組且處於 `answering`，第1組的學生接收 REST 回應或 WebSocket 狀態
 - **THEN** payload MUST NOT 包含第2組到第50組的答案、是否已送出、順位或判定結果
+
+#### Scenario: 未匯入題目不得開始
+- **WHEN** 尚未匯入題目時老師按開始
+- **THEN** 伺服器 MUST 回 409

@@ -18,6 +18,7 @@
 - 實作輪評審：紅隊與架構通道均 `CLEARED`；回報分別記於 `openspec/changes/team-limit-50/implementation-red.dispatch.review-red.md` 與 `implementation-arch.dispatch.review-arch.md`。兩通道都註明 768 px 人工驗證仍未完成。
 - 人工 UI 補驗：本機 UI 實際完成第50組加入、老師端釋放、學生端重新加入；Chrome 100% 下確認學生頁狀態。後續以 Chrome DevTools Responsive 設為 768px 並成功載入學生頁，但該頁為預設 4 組，沒有在該寬度重跑第50組流程。結果表因尚未匯入題目而不可檢查；未用計時器證明30秒。詳見 `openspec/changes/team-limit-50/manual-ui-addendum.md`，task 4.2 維持未勾選。
 - 最終人工驗證補正（2026-11-28）：以 Microsoft Edge 載入合成 `group.xlsx` 完成 50 組桌面流程（17.7 秒）及 768 px 窄畫面流程（24.1 秒），確認第50組顯示、加入、老師釋放與重新加入；詳細紀錄以 `openspec/changes/team-limit-50/verification.md` 為準，前述尚未完成的紀錄是較早測試狀態。
+- 合流後收尾（2026-11-28）：OpenSpec PR #45 與 SpecKit PR #39 均已合入 `dev`；base 已確認指向 `dev`。最新完整 `make gate` 綠，server 388、ops 48、web 108，OpenSpec 13/13、parity 0 處不一致。OpenSpec 主規格已同步 2–50，change 隨後歸檔。
 - 後續再試 768px 教師頁，組數欄位可改為 50，但 CUA 對「設定組數」按鈕回報無可用幾何位置；教師頁清單仍只有第1至第4組，故設定未生效。已找到合成夾具 `tests/fixtures/guided-notes/group.xlsx`，本次尚未匯入；未改活動狀態。伺服器檢查後停止。
 - 文件門禁：最後新增人工 UI 補記後，`make gate-docs` 通過，繁體中文0處、secrets 0 findings、OpenSpec 10/10、agents 0漂移。
 - 仍待：task 4.2 的 768px 下 50 組流程檢查、結果表檢查與30秒計時證據；合入 `dev` 後依流程 archive 並同步主規格。
