@@ -121,8 +121,41 @@ def test_configure_teams_rejected_while_answering(loaded_client, teacher_headers
     assert client.post("/api/teacher/teams", json={"count": 5}, headers=teacher_headers).status_code == 409
 
 
-def test_configure_teams_out_of_range(client, teacher_headers):
-    assert client.post("/api/teacher/teams", json={"count": 20}, headers=teacher_headers).status_code == 422
+@pytest.mark.parametrize("count", [2, 12, 13, 50])
+def test_configure_teams_supported_boundaries(client, teacher_headers, count):
+    response = client.post("/api/teacher/teams", json={"count": count}, headers=teacher_headers)
+    assert response.status_code == 200, response.text
+    expected = [f"第{i}組" for i in range(1, count + 1)]
+    assert response.json()["teams"] == expected
+    assert client.get("/api/public/info").json()["teams"] == expected
+
+
+@pytest.mark.parametrize("count", [1, 51, True, False, 2.0, 2.5, "2", "50", None])
+def test_configure_teams_rejects_invalid_count_without_state_change(client, teacher_headers, count):
+    before_public = client.get("/api/public/info").json()
+    before_teacher = client.get("/api/teacher/state", headers=teacher_headers).json()
+    response = client.post("/api/teacher/teams", json={"count": count}, headers=teacher_headers)
+    assert response.status_code == 422, response.text
+    assert client.get("/api/public/info").json() == before_public
+    assert client.get("/api/teacher/state", headers=teacher_headers).json() == before_teacher
+
+
+def test_configure_teams_rejects_extra_fields(client, teacher_headers):
+    response = client.post(
+        "/api/teacher/teams", json={"count": 50, "unexpected": True}, headers=teacher_headers
+    )
+    assert response.status_code == 422
+    assert client.get("/api/public/info").json()["teams"] == [f"第{i}組" for i in range(1, 5)]
+
+
+def test_team_fifty_can_join_release_and_rejoin(client, teacher_headers):
+    response = client.post("/api/teacher/teams", json={"count": 50}, headers=teacher_headers)
+    assert response.status_code == 200
+    token = join(client, "第50組")
+    release = client.post("/api/teacher/release", json={"team": "第50組"}, headers=teacher_headers)
+    assert release.status_code == 200
+    assert client.app.state.activity.team_of(token) is None
+    assert join(client, "第50組")
 
 
 def test_binary_frame_is_ignored(loaded_client, teacher_headers):

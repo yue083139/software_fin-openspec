@@ -164,6 +164,19 @@ def test_device_limit(loaded_client, teacher_headers):
     assert join(c, "第1組", "WRONG1").status_code == 403
 
 
+def test_fiftieth_team_keeps_six_device_limit(loaded_client, teacher_headers):
+    c = loaded_client
+    assert c.post("/api/teacher/teams", json={"count": 50}, headers=teacher_headers).status_code == 200
+    team_on(c, teacher_headers)
+    first = join(c, "第50組")
+    assert first.status_code == 200
+    code = state(c, teacher_headers)["invite_codes"]["第50組"]
+    for _ in range(MAX_DEVICES - 1):
+        assert join(c, "第50組", code).status_code == 200
+    assert join(c, "第50組", code).status_code == 409
+    assert state(c, teacher_headers)["devices"]["第50組"] == MAX_DEVICES
+
+
 @pytest.mark.parametrize("existing,expected", [(MAX_DEVICES, 0), (MAX_DEVICES - 1, 1)])
 def test_concurrent_join_at_limit(existing, expected):
     async def go():

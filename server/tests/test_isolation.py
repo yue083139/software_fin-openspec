@@ -54,6 +54,33 @@ def test_websocket_and_rest_do_not_leak(two_teams, teacher_headers):
     assert SECRET_A in ended
 
 
+def test_fifty_team_student_payloads_do_not_leak_other_answers(loaded_client, teacher_headers):
+    client = loaded_client
+    assert client.post("/api/teacher/teams", json={"count": 50}, headers=teacher_headers).status_code == 200
+    tokens = {
+        team: join(client, team)
+        for team in (f"第{i}組" for i in range(1, 51))
+    }
+    assert client.post("/api/teacher/start", headers=teacher_headers).status_code == 200
+    peer_answers = [f"第{i}組他組答案" for i in range(2, 51)]
+    peer_responses = [
+        submit(client, tokens[f"第{i}組"], 3, [peer_answers[i - 2]])
+        for i in range(2, 51)
+    ]
+    assert all(response.status_code == 200 for response in peer_responses)
+    # 目前學生 REST 僅有送出端點；成功回應只回送該組自己的答案，沒有讀取活動狀態端點。
+    for i, response in enumerate(peer_responses, start=2):
+        assert f"第{i}組他組答案" in response.text
+        assert all(answer not in response.text for answer in peer_answers if answer != f"第{i}組他組答案")
+
+    with client.websocket_connect(f"/ws?role=student&token={tokens['第1組']}") as socket:
+        raw = socket.receive_text()
+    view = json.loads(raw)["view"]
+    assert all(answer not in raw for answer in peer_answers)
+    assert view["team"] == "第1組"
+    assert "results" not in view
+
+
 def test_other_team_submit_sends_nothing(two_teams, teacher_headers):
     client, ta, tb = two_teams
     with client.websocket_connect(f"/ws?role=student&token={tb}") as wb:

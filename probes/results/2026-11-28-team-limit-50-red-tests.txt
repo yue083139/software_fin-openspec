@@ -1,0 +1,28 @@
+指令：uv run --project server pytest -q server/tests/test_api_skeleton.py server/tests/test_phases.py server/tests/test_isolation.py server/tests/test_submit.py server/tests/test_team_mode.py
+執行前組數上限：12
+
+.........................FF....F.F...F........................FF...F.... [ 58%]
+..........................F............F............                     [100%]
+=========================== short test summary info ===========================
+FAILED server\tests\test_api_skeleton.py::test_configure_teams_supported_boundaries[13]
+FAILED server\tests\test_api_skeleton.py::test_configure_teams_supported_boundaries[50]
+FAILED server\tests\test_api_skeleton.py::test_configure_teams_rejects_invalid_count_without_state_change[2.0]
+FAILED server\tests\test_api_skeleton.py::test_configure_teams_rejects_invalid_count_without_state_change[2]
+FAILED server\tests\test_api_skeleton.py::test_team_fifty_can_join_release_and_rejoin
+FAILED server\tests\test_phases.py::test_team_count_supported_boundaries[13]
+FAILED server\tests\test_phases.py::test_team_count_supported_boundaries[50]
+FAILED server\tests\test_isolation.py::test_fifty_team_student_payloads_do_not_leak_other_answers
+FAILED server\tests\test_submit.py::test_fifty_teams_concurrent_ranks_are_unique_with_one_winner
+FAILED server\tests\test_team_mode.py::test_fiftieth_team_keeps_six_device_limit
+10 failed, 114 passed, 1 warning in 16.95s
+
+指令：npm.cmd --prefix web test -- team-limit.test.tsx
+
+ ❯ src/pages/team-limit.test.tsx (2 tests | 1 failed) 587ms
+   × 五十組管理與結果 > 組數上限為五十，且老師可操作第50組 113ms
+Error: expect(element).toHaveAttribute("max", "50") // element.getAttribute("max") === "50"
+Expected the element to have attribute:
+  max="50"
+Received:
+  max="12"
+Tests 1 failed | 1 passed (2)
