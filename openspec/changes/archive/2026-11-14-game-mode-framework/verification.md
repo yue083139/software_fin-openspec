@@ -64,7 +64,7 @@ FAILED tests/test_judging.py::test_concurrent_judge_and_accept_suggestions - ...
 
 ## 人工驗證（需求 P-05）
 
-狀態：**待執行**（交組員，照 `docs/manual-verification.md` 對應場次執行，結果回填本段）。
+狀態：**已執行**（照 `docs/manual-verification.md` 場次 B）。
 
 1. `make dev`，開老師頁與兩個學生分頁（第1組、第2組）；老師匯入 `tests/fixtures/guided-notes/reference.xlsx`。
 2. 老師「模式」選「只計對錯」；兩個學生分頁都顯示「模式：只計對錯」。開始搶答後模式單選應停用。
@@ -73,4 +73,4 @@ FAILED tests/test_judging.py::test_concurrent_judge_and_accept_suggestions - ...
 5. 老師按「採用全部建議」⇒ 剩 1 筆（第 3 題無參考答案）；手動判第 3 題後按「揭曉結果」。
 6. 學生分頁看到每筆 ✓／✗、「最早答對：第2組（cpu）」、欄名「得分」。老師匯出，第 1 題作答格為「cpu」。
 
-結果：＿＿＿（執行人／日期／看到什麼）
+結果：✅ 全部步驟符合（組員／2026-11-17／`dev` `1339d44`，Windows 11＋Chrome、Edge；明細見 `docs/manual-verification.md` §5 場次 B）。

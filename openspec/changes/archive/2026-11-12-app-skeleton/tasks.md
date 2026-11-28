@@ -15,5 +15,5 @@
 
 ## 3. 驗證
 - [x] 3.1 `make gate-pr` 原樣輸出寫入 `verification.md`
-- [ ] 3.2 人工驗證步驟與結果寫入 `verification.md`（步驟已寫，待負責人執行）
+- [x] 3.2 人工驗證步驟與結果寫入 `verification.md`（2026-11-17 組員執行，全部符合）
 - [x] 3.3 `docs/parity.md` §4 狀態更新、`make gate-parity` 綠

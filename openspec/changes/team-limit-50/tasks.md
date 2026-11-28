@@ -2,7 +2,7 @@
 
 ## 1. 驗收先行與提案閉環
 
-- [x] 1.1 在 `eval/acceptance/matrix.yaml` 新增 `team-limit-50` 的 2／12／13／50 正例、1／51／布林／小數／字串負例、50 組隔離、300 連線容量與 UI 人工驗收落點；YAML 可解析，M-020–M-022 聲明與 SpecKit 逐字一致。
+- [x] 1.1 在 `eval/acceptance/matrix.yaml` 新增 `team-limit-50` 的 2／12／13／50 正例、1／51／布林／小數／字串負例、50 組隔離、300 連線容量與 UI 人工驗收落點；YAML 可解析，M-031–M-033 聲明與 SpecKit 逐字一致。
 - [x] 1.2 先擴充 `server/tests/test_api_skeleton.py` 與 `server/tests/test_phases.py`，涵蓋 2–50、嚴格整數、失敗不改狀態、`answering` 回 409 與第50組加入／釋放；基線 12 組時 13／50 組案例如預期失敗，結果見 `probes/results/2026-11-28-team-limit-50-red-tests.txt`。
 - [x] 1.3 先擴充 `server/tests/test_isolation.py`、`test_submit.py`、`test_team_mode.py`，涵蓋第2–50組提交後第1組 payload 不含他組答案、50 組 × 6 台與第301台被拒；基線 12 組時新案例如預期因 50 組設定遭拒，結果見紅燈紀錄。
 - [x] 1.4 先新增 `web/src/pages/team-limit.test.tsx`，涵蓋 input 最大值 50、第50組可見與釋放操作；基線執行結果為 1 failed、1 passed，錯誤是 `max="12"`，詳見紅燈紀錄。
