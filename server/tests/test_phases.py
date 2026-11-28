@@ -55,10 +55,17 @@ def test_reset_keeps_teams(ready_activity):
     assert a.teams == ["第1組", "第2組", "第3組"]
 
 
-@pytest.mark.parametrize("n", [1, 13])
+@pytest.mark.parametrize("n", [1, 51])
 def test_team_count_bounds(n):
     with pytest.raises(ValueError):
         asyncio.run(Activity().configure_teams(n))
+
+
+@pytest.mark.parametrize("n", [2, 12, 13, 50])
+def test_team_count_supported_boundaries(n):
+    activity = Activity()
+    asyncio.run(activity.configure_teams(n))
+    assert activity.teams == [f"第{i}組" for i in range(1, n + 1)]
 
 
 def test_team_count_only_when_preparing(ready_activity):
